@@ -25,6 +25,7 @@ import android.util.Log;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.PackageInstallerCompat;
 import com.android.launcher3.compat.UserManagerCompat;
+import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.config.ProviderConfig;
 import com.android.launcher3.dynamicui.ExtractionUtils;
 import com.android.launcher3.logging.FileLog;
@@ -37,16 +38,20 @@ import com.android.launcher3.util.Thunk;
 import java.lang.ref.WeakReference;
 
 public class LauncherAppState {
+    public static final String TAG = "LauncherAppState";
 
     public static final boolean PROFILE_STARTUP = ProviderConfig.IS_DOGFOOD_BUILD;
 
+
     private final AppFilter mAppFilter;
-    @Thunk final LauncherModel mModel;
+    @Thunk
+    final LauncherModel mModel;
     private final IconCache mIconCache;
     private final WidgetPreviewLoader mWidgetCache;
     private final DeepShortcutManager mDeepShortcutManager;
 
-    @Thunk boolean mWallpaperChangedSinceLastCheck;
+    @Thunk
+    boolean mWallpaperChangedSinceLastCheck;
 
     private static WeakReference<LauncherProvider> sLauncherProvider;
     private static Context sContext;
@@ -96,6 +101,7 @@ public class LauncherAppState {
         }
 
         mInvariantDeviceProfile = new InvariantDeviceProfile(sContext);
+        Log.d(TAG, "numColumns:" + mInvariantDeviceProfile.numColumns + ",numRows:" + mInvariantDeviceProfile.numRows);
         mIconCache = new IconCache(sContext, mInvariantDeviceProfile);
         mWidgetCache = new WidgetPreviewLoader(sContext, mIconCache);
         mDeepShortcutManager = new DeepShortcutManager(sContext, new ShortcutCache());
@@ -185,5 +191,10 @@ public class LauncherAppState {
 
     public InvariantDeviceProfile getInvariantDeviceProfile() {
         return mInvariantDeviceProfile;
+    }
+
+    public static boolean isDisableAllApps() {
+        // Returns false on non-dogfood builds.
+        return FeatureFlags.LAUNCHER_DISABLE_ALL_APPS;
     }
 }

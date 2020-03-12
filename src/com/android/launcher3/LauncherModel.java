@@ -417,7 +417,7 @@ public class LauncherModel extends BroadcastReceiver
         LongSparseArray<ArrayList<ItemInfo>> screenItems = new LongSparseArray<>();
 
         // Use sBgItemsIdMap as all the items are already loaded.
-        assertWorkspaceLoaded();
+//        assertWorkspaceLoaded();
         synchronized (sBgLock) {
             for (ItemInfo info : sBgItemsIdMap) {
                 if (info.container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
@@ -496,6 +496,7 @@ public class LauncherModel extends BroadcastReceiver
                 // can not use sBgWorkspaceScreens because loadWorkspace() may not have been
                 // called.
                 ArrayList<Long> workspaceScreens = loadWorkspaceScreensDb(context);
+                Log.d("pengcong","workspaceScreens:"+workspaceScreens.toString());
                 synchronized(sBgLock) {
                     for (ItemInfo item : workspaceApps) {
                         if (item instanceof ShortcutInfo) {
@@ -1494,6 +1495,13 @@ public class LauncherModel extends BroadcastReceiver
                 if (DEBUG_LOADERS) Log.d(TAG, "step 2: loading all apps");
                 loadAndBindAllApps();
 
+                // 当前Launcher没有应用程序菜单，将应用程序菜单中的数据合并到桌面上来
+                // TODO 应用程序菜单中的数据需要清0?
+                if (LauncherAppState.isDisableAllApps()) {
+                    verifyApplications();
+                }
+
+
                 waitForIdle();
 
                 // third step
@@ -1551,6 +1559,26 @@ public class LauncherModel extends BroadcastReceiver
                 return callbacks;
             }
         }
+        private void verifyApplications() {
+            final Context context = mApp.getContext();
+
+            // Cross reference all the applications in our apps list with items in the workspace
+            ArrayList<ItemInfo> tmpInfos;
+            ArrayList<ItemInfo> added = new ArrayList<ItemInfo>();
+            synchronized (sBgLock) {
+                for (AppInfo app : mBgAllAppsList.data) {
+                    tmpInfos = getItemInfoForComponentName(app.componentName, app.user);
+                    if (tmpInfos.isEmpty()) {
+                        // We are missing an application icon, so add this to the workspace
+                        added.add(app);
+                    }
+                }
+            }
+            if (!added.isEmpty()) {
+                addAndBindAddedWorkspaceItems(context,added);
+            }
+        }
+
 
         // check & update map of what's occupied; used to discard overlapping/invalid items
         private boolean checkItemPlacement(LongArrayMap<GridOccupancy> occupied, ItemInfo item,
@@ -2677,6 +2705,7 @@ public class LauncherModel extends BroadcastReceiver
             }
         }
 
+
         private void updateIconCache() {
             // Ignore packages which have a promise icon.
             HashSet<String> packagesToIgnore = new HashSet<>();
@@ -3123,7 +3152,13 @@ public class LauncherModel extends BroadcastReceiver
             final HashMap<ComponentName, AppInfo> addedOrUpdatedApps = new HashMap<>();
 
             if (added != null) {
-                addAppsToAllApps(context, added);
+                // Ensure that we add all the workspace applications to the db
+                if (LauncherAppState.isDisableAllApps()) {
+                    final ArrayList<ItemInfo> addedInfos = new ArrayList<ItemInfo>(added);
+                    addAndBindAddedWorkspaceItems(context, addedInfos);
+                } else {
+                    addAppsToAllApps(context, added);
+                }
                 for (AppInfo ai : added) {
                     addedOrUpdatedApps.put(ai.componentName, ai);
                 }

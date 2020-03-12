@@ -3142,6 +3142,11 @@ public class Launcher extends Activity
                             }
                         }
                     }
+
+                    // hotseat固定
+                    if(longClickCellInfo.container == Favorites.CONTAINER_HOTSEAT){
+                        return true;
+                    }
                     mWorkspace.startDrag(longClickCellInfo, dragOptions);
                 }
             }

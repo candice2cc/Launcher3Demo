@@ -29,7 +29,7 @@ public final class FeatureFlags {
     public static boolean LAUNCHER3_LEGACY_FOLDER_ICON = false;
     public static boolean LAUNCHER3_USE_SYSTEM_DRAG_DRIVER = true;
     public static boolean LAUNCHER3_DISABLE_PINCH_TO_OVERVIEW = false;
-    public static boolean LAUNCHER3_ALL_APPS_PULL_UP = true;
+    public static boolean LAUNCHER3_ALL_APPS_PULL_UP = false;
 
     // Feature flag to enable moving the QSB on the 0th screen of the workspace.
     public static final boolean QSB_ON_FIRST_SCREEN = true;
@@ -39,4 +39,8 @@ public final class FeatureFlags {
     public static final boolean PULLDOWN_SEARCH = false;
     // When enabled the status bar may show dark icons based on the top of the wallpaper.
     public static final boolean LIGHT_STATUS_BAR = false;
+
+    // add by candice
+    public static boolean LAUNCHER_DISABLE_ALL_APPS = true;
+
 }
