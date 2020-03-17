@@ -2,12 +2,12 @@ package com.android.launcher3.testing;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.android.launcher3.custom.AdInfo;
 import com.android.launcher3.AppInfo;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherCallbacks;
@@ -124,6 +124,11 @@ public class LauncherExtension extends Launcher {
 
         @Override
         public void bindAllApplications(ArrayList<AppInfo> apps) {
+        }
+
+        @Override
+        public void bindHotSeat(ArrayList<AdInfo> apps) {
+
         }
 
         @Override

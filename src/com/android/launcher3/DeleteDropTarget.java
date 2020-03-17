@@ -69,36 +69,50 @@ public class DeleteDropTarget extends ButtonDropTarget {
     }
 
     public static boolean willAcceptDrop(Object info) {
-        if (info instanceof ItemInfo) {
-            ItemInfo item = (ItemInfo) info;
-            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPWIDGET ||
-                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) {
-                return true;
+        //添加 @{
+        if (LauncherAppState.isDisableAllApps()) {
+            if (info instanceof ShortcutInfo) {
+                ShortcutInfo item = (ShortcutInfo) info;
+                return item.itemType != LauncherSettings.BaseLauncherColumns.ITEM_TYPE_APPLICATION;
             }
-
-            if (!LauncherAppState.isDisableAllApps() &&
-                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_FOLDER) {
-                return true;
-            }
-
-            if (!LauncherAppState.isDisableAllApps() &&
-                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
-                    item instanceof AppInfo) {
-                AppInfo appInfo = (AppInfo) info;
-                return (appInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
-            }
-
-            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
-                    item instanceof ShortcutInfo) {
-                if (LauncherAppState.isDisableAllApps()) {
-                    ShortcutInfo shortcutInfo = (ShortcutInfo) info;
-                    return (shortcutInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
-                } else {
-                    return true;
-                }
-            }
+            return info instanceof LauncherAppWidgetInfo;
         }
-        return false;
+        //添加 }@
+        return (info instanceof ShortcutInfo)
+                || (info instanceof LauncherAppWidgetInfo)
+                || (info instanceof FolderInfo);
+
+
+//        if (info instanceof ItemInfo) {
+//            ItemInfo item = (ItemInfo) info;
+//            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPWIDGET ||
+//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) {
+//                return true;
+//            }
+//
+//            if (!LauncherAppState.isDisableAllApps() &&
+//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_FOLDER) {
+//                return true;
+//            }
+//
+//            if (!LauncherAppState.isDisableAllApps() &&
+//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
+//                    item instanceof AppInfo) {
+//                AppInfo appInfo = (AppInfo) info;
+//                return (appInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
+//            }
+//
+//            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
+//                    item instanceof ShortcutInfo) {
+//                if (LauncherAppState.isDisableAllApps()) {
+//                    ShortcutInfo shortcutInfo = (ShortcutInfo) info;
+//                    return (shortcutInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
+//                } else {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
     }
 
     /**

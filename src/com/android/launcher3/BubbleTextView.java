@@ -41,6 +41,7 @@ import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.android.launcher3.IconCache.IconLoadRequest;
+import com.android.launcher3.custom.AdInfo;
 import com.android.launcher3.folder.FolderIcon;
 import com.android.launcher3.model.PackageItemInfo;
 
@@ -177,6 +178,19 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
+    public void applyFromAdAppInfo(AdInfo info){
+        // TODO
+        Drawable iconDrawable = getContext().getDrawable(R.drawable.icon_test);
+        setIcon(iconDrawable);
+        setText(info.title);
+        if (info.contentDescription != null) {
+            setContentDescription(info.isDisabled()
+                    ? getContext().getString(R.string.disabled_app_label, info.contentDescription)
+                    : info.contentDescription);
+        }
+        super.setTag(info);
+    }
+
     public void applyFromPackageItemInfo(PackageItemInfo info) {
         applyIconAndLabel(info.iconBitmap, info);
         // We don't need to check the info since it's not a ShortcutInfo
@@ -185,6 +199,8 @@ public class BubbleTextView extends TextView
         // Verify high res immediately
         verifyHighRes();
     }
+
+
 
     private void applyIconAndLabel(Bitmap icon, ItemInfo info) {
         FastBitmapDrawable iconDrawable = mLauncher.createIconDrawable(icon);

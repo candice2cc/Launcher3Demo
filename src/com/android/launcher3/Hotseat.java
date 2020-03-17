@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,13 +37,18 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.custom.AdInfo;
 import com.android.launcher3.dynamicui.ExtractedColors;
 import com.android.launcher3.logging.UserEventDispatcher;
 import com.android.launcher3.userevent.nano.LauncherLogProto;
 import com.android.launcher3.userevent.nano.LauncherLogProto.Target;
 
+import java.util.ArrayList;
+
 public class Hotseat extends FrameLayout
         implements UserEventDispatcher.LaunchSourceProvider {
+
+    public final static String TAG = "Hotseat";
 
     private CellLayout mContent;
 
@@ -114,7 +120,8 @@ public class Hotseat extends FrameLayout
         DeviceProfile grid = mLauncher.getDeviceProfile();
         mContent = (CellLayout) findViewById(R.id.layout);
         if (grid.isLandscape && !grid.isLargeTablet) {
-            mContent.setGridSize(1, (int) grid.inv.numHotseatIcons);
+//            mContent.setGridSize(1, (int) grid.inv.numHotseatIcons);
+            mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
         } else {
             mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
         }
@@ -217,5 +224,45 @@ public class Hotseat extends FrameLayout
 
     public int getBackgroundDrawableColor() {
         return mBackgroundColor;
+    }
+
+    public void setApps(ArrayList<AdInfo> apps) {
+        // 更新界面
+        Log.d(TAG, "setApps");
+
+        resetLayout();
+
+        for (int i = 0; i < apps.size(); i++) {
+            AdInfo info = apps.get(i);
+
+            BubbleTextView favorite = (BubbleTextView) LayoutInflater.from(getContext()).inflate(R.layout.app_icon,
+                    mContent, false);
+            favorite.applyFromAdAppInfo(info);
+
+            favorite.setCompoundDrawablePadding(mLauncher.getDeviceProfile().iconDrawablePaddingPx);
+            favorite.setOnClickListener(null);
+            favorite.setOnFocusChangeListener(mLauncher.mFocusHandler);
+
+            favorite.setOnKeyListener(new HotseatIconKeyEventListener());
+
+
+            CellLayout.LayoutParams lp = new CellLayout.LayoutParams(i, 0, 1, 1);
+            mContent.addViewToCellLayout(favorite, -1, 12, lp, true);
+        }
+
+
+//        resetLayout();
+//
+//        Context context = getContext();
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//
+//        BubbleTextView icon = (BubbleTextView) inflater.inflate(R.layout.all_apps_icon, mContent, false);
+//        icon.applyFromAdAppInfo(apps.get(0));
+//
+//
+//        CellLayout.LayoutParams lp = new CellLayout.LayoutParams(0, 0, 1, 1);
+//        lp.canReorder = false;
+//        mContent.addViewToCellLayout(icon, -1, -1, lp, true);
+
     }
 }

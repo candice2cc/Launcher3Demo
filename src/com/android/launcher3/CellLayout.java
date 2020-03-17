@@ -630,10 +630,10 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         final LayoutParams lp = params;
 
         // Hotseat icons - remove text
-        if (child instanceof BubbleTextView) {
-            BubbleTextView bubbleChild = (BubbleTextView) child;
-            bubbleChild.setTextVisibility(!mIsHotseat);
-        }
+//        if (child instanceof BubbleTextView) {
+//            BubbleTextView bubbleChild = (BubbleTextView) child;
+//            bubbleChild.setTextVisibility(!mIsHotseat);
+//        }
 
         child.setScaleX(getChildrenScale());
         child.setScaleY(getChildrenScale());
