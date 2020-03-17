@@ -120,8 +120,8 @@ public class Hotseat extends FrameLayout
         DeviceProfile grid = mLauncher.getDeviceProfile();
         mContent = (CellLayout) findViewById(R.id.layout);
         if (grid.isLandscape && !grid.isLargeTablet) {
-//            mContent.setGridSize(1, (int) grid.inv.numHotseatIcons);
-            mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
+            mContent.setGridSize(1, (int) grid.inv.numHotseatIcons);
+//            mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
         } else {
             mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
         }

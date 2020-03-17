@@ -1344,6 +1344,8 @@ public class Launcher extends Activity
         mWorkspace = (Workspace) mDragLayer.findViewById(R.id.workspace);
         mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
                 ? R.id.workspace_blocked_row : R.id.qsb_container);
+
+
         mWorkspace.initParentViews(mDragLayer);
 
         mLauncherView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
