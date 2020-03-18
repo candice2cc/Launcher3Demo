@@ -1806,8 +1806,11 @@ public class Launcher extends Activity
 
     public View getQsbContainer() {
 
-        mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
-                ? R.id.workspace_blocked_row : R.id.qsb_container);
+        if (mQsbContainer == null) {
+            mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
+                    ? R.id.workspace_blocked_row : R.id.qsb_container);
+        }
+
         Log.d(TAG, "mQsbContainer:" + mQsbContainer);
 
         return mQsbContainer;
