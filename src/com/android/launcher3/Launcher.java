@@ -1337,14 +1337,16 @@ public class Launcher extends Activity
      * Finds all the views we need and configure them properly.
      */
     private void setupViews() {
-        Log.d(TAG,"setupViews");
+        Log.d(TAG, "setupViews");
         mLauncherView = findViewById(R.id.launcher);
         mDragLayer = (DragLayer) findViewById(R.id.drag_layer);
         mFocusHandler = mDragLayer.getFocusIndicatorHelper();
         mWorkspace = (Workspace) mDragLayer.findViewById(R.id.workspace);
-        mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
-                ? R.id.workspace_blocked_row : R.id.qsb_container);
+//        mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
+//                ? R.id.workspace_blocked_row : R.id.qsb_container);
 
+
+        mQsbContainer = mDragLayer.findViewById(R.id.workspace_blocked_row);
 
         mWorkspace.initParentViews(mDragLayer);
 
@@ -1803,7 +1805,11 @@ public class Launcher extends Activity
     }
 
     public View getQsbContainer() {
+
+        mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
+                ? R.id.workspace_blocked_row : R.id.qsb_container);
         Log.d(TAG, "mQsbContainer:" + mQsbContainer);
+
         return mQsbContainer;
     }
 

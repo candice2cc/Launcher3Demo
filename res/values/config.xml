@@ -66,7 +66,7 @@
     <integer name="config_caretAnimationDuration">200</integer>
 
 <!-- Hotseat -->
-    <bool name="hotseat_transpose_layout_with_orientation">true</bool>
+    <bool name="hotseat_transpose_layout_with_orientation">false</bool>
 
     <!-- Name of a subclass of com.android.launcher3.AppFilter used to
          filter the activities shown in the launcher. Can be empty. -->
