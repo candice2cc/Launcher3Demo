@@ -65,9 +65,13 @@
             android:layout_gravity="bottom|left"/>
 
         <!-- A place holder view instead of the QSB in transposed layout -->
-        <View
-            android:layout_width="0dp"
-            android:layout_height="10dp"
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:id="@+id/workspace_blocked_row" />-->
+
+        <include
+            layout="@layout/qsb_container"
             android:id="@+id/workspace_blocked_row" />
 
 
