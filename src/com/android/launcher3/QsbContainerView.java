@@ -75,7 +75,7 @@ public class QsbContainerView extends FrameLayout {
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.btn_qsb_search) {
-                getActivity().startSearch("", false, null, true);
+//                getActivity().startSearch("", false, null, true);
             }
         }
 

@@ -1522,6 +1522,10 @@ public class LauncherModel extends BroadcastReceiver
             onlyBindAllApps();
 
             bindDeepShortcuts();
+
+            bindHotSeat();
+
+
         }
 
         public void run() {

@@ -63,8 +63,12 @@
             android:id="@+id/drop_target_bar"
             layout="@layout/drop_target_bar_horz" />
 
-        <include
-            layout="@layout/qsb_container"
+<!--        <include-->
+<!--            layout="@layout/qsb_container"-->
+<!--            android:id="@+id/qsb_container" />-->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
             android:id="@+id/qsb_container" />
 
         <include layout="@layout/widgets_view"

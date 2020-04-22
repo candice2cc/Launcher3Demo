@@ -390,6 +390,7 @@ public class Launcher extends Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         if (DEBUG_STRICT_MODE) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
@@ -618,7 +619,7 @@ public class Launcher extends Activity
         if (mLauncherCallbacks != null) {
             return mLauncherCallbacks.hasCustomContentToLeft();
         }
-        return false;
+        return true;
     }
 
     /**
@@ -629,8 +630,39 @@ public class Launcher extends Activity
     protected void populateCustomContentContainer() {
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.populateCustomContentContainer();
+
         }
+
+        View customContent = getLayoutInflater().inflate(R.layout.screen_custom, null);
+
+        CustomContentCallbacks mCustomeContentCallbacks = new CustomContentCallbacks() {
+            @Override
+            public void onShow(boolean fromResume) {
+                Log.d(TAG, "CustomContentCallbacks show, fromResume:" + fromResume);
+            }
+
+            @Override
+            public void onHide() {
+                Log.d(TAG, "CustomContentCallbacks hide");
+            }
+
+            @Override
+            public void onScrollProgressChanged(float progress) {
+//                Log.d(TAG, "CustomContentCallbacks progress:" + progress);
+
+            }
+
+            @Override
+            public boolean isScrollingAllowed() {
+                return true;
+            }
+        };
+
+
+        addToCustomContentPage(customContent, mCustomeContentCallbacks, "");
+
     }
+
 
     /**
      * Invoked by subclasses to signal a change to the {@link #addCustomContentToLeft} value to
@@ -1346,7 +1378,8 @@ public class Launcher extends Activity
 //                ? R.id.workspace_blocked_row : R.id.qsb_container);
 
 
-        mQsbContainer = mDragLayer.findViewById(R.id.workspace_blocked_row);
+        mQsbContainer = mDragLayer.findViewById(R.id.qsb_container);
+        Log.d(TAG, "setupViews mQsbContainer:" + mQsbContainer);
 
         mWorkspace.initParentViews(mDragLayer);
 
@@ -1373,6 +1406,8 @@ public class Launcher extends Activity
         // Until the workspace is bound, ensure that we keep the wallpaper offset locked to the
         // default state, otherwise we will update to the wrong offsets in RTL
         mWorkspace.lockWallpaperToDefaultPage();
+
+
         mWorkspace.bindAndInitFirstWorkspaceScreen(null /* recycled qsb */);
         mDragController.addDragListener(mWorkspace);
 
@@ -1807,11 +1842,14 @@ public class Launcher extends Activity
     public View getQsbContainer() {
 
         if (mQsbContainer == null) {
-            mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
-                    ? R.id.workspace_blocked_row : R.id.qsb_container);
+//            mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
+//                    ? R.id.workspace_blocked_row : R.id.qsb_container);
+
+            mQsbContainer = mDragLayer.findViewById(R.id.qsb_container);
+
         }
 
-        Log.d(TAG, "mQsbContainer:" + mQsbContainer);
+//        Log.d(TAG, "mQsbContainer:" + mQsbContainer);
 
         return mQsbContainer;
     }
@@ -3635,6 +3673,7 @@ public class Launcher extends Activity
             // If there are no screens, we need to have an empty screen
             mWorkspace.addExtraEmptyScreen();
         }
+        Log.d(TAG, "bindScreens orderedScreenIds:" + orderedScreenIds);
         bindAddScreens(orderedScreenIds);
 
         // Create the custom content page (this call updates mDefaultScreen which calls
@@ -3643,6 +3682,7 @@ public class Launcher extends Activity
             mWorkspace.createCustomContentContainer();
             populateCustomContentContainer();
         }
+
 
         // After we have added all the screens, if the wallpaper was locked to the default state,
         // then notify to indicate that it can be released and a proper wallpaper offset can be
