@@ -388,6 +388,9 @@ public class DeviceProfile {
                         paddingBottom);
             }
         }
+
+//        padding.set(0, 0,
+//                0, 0);
         return padding;
     }
 
