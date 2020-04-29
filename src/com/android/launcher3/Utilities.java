@@ -39,6 +39,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
@@ -46,6 +47,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -70,6 +72,8 @@ import com.android.launcher3.util.IconNormalizer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -100,7 +104,8 @@ public final class Utilities {
         sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,
                 Paint.FILTER_BITMAP_FLAG));
     }
-    static int sColors[] = { 0xffff0000, 0xff00ff00, 0xff0000ff };
+
+    static int sColors[] = {0xffff0000, 0xff00ff00, 0xff0000ff};
     static int sColorIndex = 0;
 
     private static final int[] sLoc0 = new int[2];
@@ -184,7 +189,7 @@ public final class Utilities {
      * exist, it returns null.
      */
     public static Bitmap createIconBitmap(String packageName, String resourceName,
-            Context context) {
+                                          Context context) {
         PackageManager packageManager = context.getPackageManager();
         // the resource
         try {
@@ -232,7 +237,7 @@ public final class Utilities {
     /**
      * Badges the provided icon with the user badge if required.
      */
-    public static Bitmap badgeIconForUser(Bitmap icon,  UserHandleCompat user, Context context) {
+    public static Bitmap badgeIconForUser(Bitmap icon, UserHandleCompat user, Context context) {
         if (Utilities.ATLEAST_LOLLIPOP && user != null
                 && !UserHandleCompat.myUserHandle().equals(user)) {
             BitmapDrawable drawable = new FixedSizeBitmapDrawable(icon);
@@ -335,8 +340,8 @@ public final class Utilities {
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
 
-            final int left = (textureWidth-width) / 2;
-            final int top = (textureHeight-height) / 2;
+            final int left = (textureWidth - width) / 2;
+            final int top = (textureHeight - height) / 2;
 
             @SuppressWarnings("all") // suppress dead code warning
             final boolean debug = false;
@@ -346,11 +351,11 @@ public final class Utilities {
                 if (++sColorIndex >= sColors.length) sColorIndex = 0;
                 Paint debugPaint = new Paint();
                 debugPaint.setColor(0xffcccc00);
-                canvas.drawRect(left, top, left+width, top+height, debugPaint);
+                canvas.drawRect(left, top, left + width, top + height, debugPaint);
             }
 
             sOldBounds.set(icon.getBounds());
-            icon.setBounds(left, top, left+width, top+height);
+            icon.setBounds(left, top, left + width, top + height);
             canvas.save(Canvas.MATRIX_SAVE_FLAG);
             canvas.scale(scale, scale, textureWidth / 2, textureHeight / 2);
             icon.draw(canvas);
@@ -366,21 +371,21 @@ public final class Utilities {
      * Given a coordinate relative to the descendant, find the coordinate in a parent view's
      * coordinates.
      *
-     * @param descendant The descendant to which the passed coordinate is relative.
-     * @param ancestor The root view to make the coordinates relative to.
-     * @param coord The coordinate that we want mapped.
+     * @param descendant        The descendant to which the passed coordinate is relative.
+     * @param ancestor          The root view to make the coordinates relative to.
+     * @param coord             The coordinate that we want mapped.
      * @param includeRootScroll Whether or not to account for the scroll of the descendant:
-     *          sometimes this is relevant as in a child's coordinates within the descendant.
+     *                          sometimes this is relevant as in a child's coordinates within the descendant.
      * @return The factor by which this descendant is scaled relative to this DragLayer. Caution
-     *         this scale factor is assumed to be equal in X and Y, and so if at any point this
-     *         assumption fails, we will need to return a pair of scale factors.
+     * this scale factor is assumed to be equal in X and Y, and so if at any point this
+     * assumption fails, we will need to return a pair of scale factors.
      */
     public static float getDescendantCoordRelativeToAncestor(
             View descendant, View ancestor, int[] coord, boolean includeRootScroll) {
         float[] pt = {coord[0], coord[1]};
         float scale = 1.0f;
         View v = descendant;
-        while(v != ancestor && v != null) {
+        while (v != ancestor && v != null) {
             // For TextViews, scroll has a meaning which relates to the text position
             // which is very strange... ignore the scroll.
             if (v != descendant || includeRootScroll) {
@@ -411,7 +416,7 @@ public final class Utilities {
         float[] pt = {coord[0], coord[1]};
 
         View v = descendant;
-        while(v != root) {
+        while (v != root) {
             ancestorChain.add(v);
             v = (View) v.getParent();
         }
@@ -422,7 +427,7 @@ public final class Utilities {
         int count = ancestorChain.size();
         for (int i = count - 1; i >= 0; i--) {
             View ancestor = ancestorChain.get(i);
-            View next = i > 0 ? ancestorChain.get(i-1) : null;
+            View next = i > 0 ? ancestorChain.get(i - 1) : null;
 
             pt[0] += ancestor.getScrollX();
             pt[1] += ancestor.getScrollY();
@@ -452,7 +457,9 @@ public final class Utilities {
                 localY < (v.getHeight() + slop);
     }
 
-    /** Translates MotionEvents from src's coordinate system to dst's. */
+    /**
+     * Translates MotionEvents from src's coordinate system to dst's.
+     */
     public static void translateEventCoordinates(View src, View dst, MotionEvent dstEvent) {
         toGlobalMotionEvent(src, dstEvent);
         toLocalMotionEvent(dst, dstEvent);
@@ -551,7 +558,8 @@ public final class Utilities {
 
     /**
      * This picks a dominant color, looking for high-saturation, high-value, repeated hues.
-     * @param bitmap The bitmap to scan
+     *
+     * @param bitmap  The bitmap to scan
      * @param samples The approximate max number of samples to use.
      */
     static int findDominantColorByHue(Bitmap bitmap, int samples) {
@@ -741,18 +749,21 @@ public final class Utilities {
                 Set<String> keys = extras.keySet();
                 return keys.size() == 1 && keys.contains(ItemInfo.EXTRA_PROFILE);
             }
-        };
+        }
+        ;
         return false;
     }
 
-    public static float dpiFromPx(int size, DisplayMetrics metrics){
+    public static float dpiFromPx(int size, DisplayMetrics metrics) {
         float densityRatio = (float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT;
         return (size / densityRatio);
     }
+
     public static int pxFromDp(float size, DisplayMetrics metrics) {
         return (int) Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 size, metrics));
     }
+
     public static int pxFromSp(float size, DisplayMetrics metrics) {
         return (int) Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 size, metrics));
@@ -799,7 +810,8 @@ public final class Utilities {
     /**
      * Wraps a message with a TTS span, so that a different message is spoken than
      * what is getting displayed.
-     * @param msg original message
+     *
+     * @param msg    original message
      * @param ttsMsg message to be spoken
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -838,7 +850,8 @@ public final class Utilities {
                 WallpaperManager wm = context.getSystemService(WallpaperManager.class);
                 return (Boolean) wm.getClass().getDeclaredMethod("isSetWallpaperAllowed")
                         .invoke(wm);
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
         }
         return true;
     }
@@ -875,7 +888,9 @@ public final class Utilities {
         return true;
     }
 
-    /** Returns whether the collection is null or empty. */
+    /**
+     * Returns whether the collection is null or empty.
+     */
     public static boolean isEmpty(Collection c) {
         return c == null || c.isEmpty();
     }
@@ -919,4 +934,62 @@ public final class Utilities {
             accessibilityManager.sendAccessibilityEvent(event);
         }
     }
+
+    public static void saveBitmap(Bitmap bitmap) {
+        final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "potato" + File.separator;
+        try {
+            File folder = new File(dir);
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            File file = new File(dir + "summer1" + ".jpg");
+            if (file.exists()) {
+                file.delete();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+
+        int w = drawable.getIntrinsicWidth();
+        int h = drawable.getIntrinsicHeight();
+        Bitmap.Config config =
+                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                        : Bitmap.Config.RGB_565;
+        Bitmap bitmap = Bitmap.createBitmap(w, h, config);
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, w, h);
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+
+    public static synchronized Bitmap getBitmap(Context context) {
+        PackageManager packageManager = null;
+        ApplicationInfo applicationInfo = null;
+        try {
+            packageManager = context.getApplicationContext()
+                    .getPackageManager();
+            applicationInfo = packageManager.getApplicationInfo(
+                    context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            applicationInfo = null;
+        }
+        Drawable d = packageManager.getApplicationIcon(applicationInfo); //xxx根据自己的情况获取drawable
+        BitmapDrawable bd = (BitmapDrawable) d;
+        Bitmap bm = bd.getBitmap();
+        return bm;
+
+    }
+
 }

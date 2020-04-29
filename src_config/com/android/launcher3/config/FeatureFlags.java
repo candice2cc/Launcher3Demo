@@ -23,7 +23,7 @@ public final class FeatureFlags {
     private FeatureFlags() {}
 
     // Custom flags go below this
-    public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = false;
+    public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = true;
     // As opposed to the new spring-loaded workspace.
     public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = false;
     public static boolean LAUNCHER3_LEGACY_FOLDER_ICON = false;

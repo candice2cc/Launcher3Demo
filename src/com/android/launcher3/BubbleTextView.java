@@ -204,43 +204,15 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
-    private void save(Bitmap bitmap){
-        final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "potato" + File.separator;
-        try {
-            File folder = new File(dir);
-            if(!folder.exists()){
-                folder.mkdir();
-            }
-            File file = new File(dir + "summer" + ".jpg");
-            if(file.exists()){
-                file.delete();
-            }
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void applyIconAndLabel(Bitmap icon, ItemInfo info) {
         FastBitmapDrawable iconDrawable = mLauncher.createIconDrawable(icon);
         if (info.isDisabled()) {
             iconDrawable.setState(FastBitmapDrawable.State.DISABLED);
         }
-//        save(icon);
-//        Drawable iconDrawable2 = getContext().getDrawable(R.drawable.icon_test);
 
         setIcon(iconDrawable);
         setText(info.title);
-
-        Log.d("pengcong", "IconSize:" + mIconSize);
-        Log.d("pengcong", "title:" + info.title);
 
         if (info.contentDescription != null) {
             setContentDescription(info.isDisabled()
