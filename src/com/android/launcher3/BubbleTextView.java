@@ -29,7 +29,9 @@ import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Environment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -45,6 +47,8 @@ import com.android.launcher3.custom.AdInfo;
 import com.android.launcher3.folder.FolderIcon;
 import com.android.launcher3.model.PackageItemInfo;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.NumberFormat;
 
 /**
@@ -160,7 +164,7 @@ public class BubbleTextView extends TextView
     }
 
     public void applyFromShortcutInfo(ShortcutInfo info, IconCache iconCache,
-            boolean promiseStateChanged) {
+                                      boolean promiseStateChanged) {
         applyIconAndLabel(info.getIcon(iconCache), info);
         setTag(info);
         if (promiseStateChanged || info.isPromise()) {
@@ -178,7 +182,7 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
-    public void applyFromAdAppInfo(AdInfo info){
+    public void applyFromAdAppInfo(AdInfo info) {
         // TODO
         Drawable iconDrawable = getContext().getDrawable(R.drawable.icon_test);
         setIcon(iconDrawable);
@@ -200,6 +204,28 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
+    private void save(Bitmap bitmap){
+        final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "potato" + File.separator;
+        try {
+            File folder = new File(dir);
+            if(!folder.exists()){
+                folder.mkdir();
+            }
+            File file = new File(dir + "summer" + ".jpg");
+            if(file.exists()){
+                file.delete();
+            }
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void applyIconAndLabel(Bitmap icon, ItemInfo info) {
@@ -207,8 +233,15 @@ public class BubbleTextView extends TextView
         if (info.isDisabled()) {
             iconDrawable.setState(FastBitmapDrawable.State.DISABLED);
         }
+//        save(icon);
+//        Drawable iconDrawable2 = getContext().getDrawable(R.drawable.icon_test);
+
         setIcon(iconDrawable);
         setText(info.title);
+
+        Log.d("pengcong", "IconSize:" + mIconSize);
+        Log.d("pengcong", "title:" + info.title);
+
         if (info.contentDescription != null) {
             setContentDescription(info.isDisabled()
                     ? getContext().getString(R.string.disabled_app_label, info.contentDescription)
@@ -262,12 +295,16 @@ public class BubbleTextView extends TextView
         }
     }
 
-    /** Returns the icon for this view. */
+    /**
+     * Returns the icon for this view.
+     */
     public Drawable getIcon() {
         return mIcon;
     }
 
-    /** Returns whether the layout is horizontal. */
+    /**
+     * Returns whether the layout is horizontal.
+     */
     public boolean isLayoutHorizontal() {
         return mLayoutHorizontal;
     }
@@ -406,7 +443,7 @@ public class BubbleTextView extends TextView
             final int scrollY = getScrollY();
 
             if (mBackgroundSizeChanged) {
-                background.setBounds(0, 0,  getRight() - getLeft(), getBottom() - getTop());
+                background.setBounds(0, 0, getRight() - getLeft(), getBottom() - getTop());
                 mBackgroundSizeChanged = false;
             }
 
@@ -508,8 +545,8 @@ public class BubbleTextView extends TextView
                             info.getInstallProgress() : 0)) : 100;
 
             setContentDescription(progressLevel > 0 ?
-                getContext().getString(R.string.app_downloading_title, info.title,
-                        NumberFormat.getPercentInstance().format(progressLevel * 0.01)) :
+                    getContext().getString(R.string.app_downloading_title, info.title,
+                            NumberFormat.getPercentInstance().format(progressLevel * 0.01)) :
                     getContext().getString(R.string.app_waiting_download_title, info.title));
 
             if (mIcon != null) {
@@ -533,7 +570,7 @@ public class BubbleTextView extends TextView
         Object tag = getTag();
         int style = ((tag != null) && (tag instanceof ShortcutInfo) &&
                 (((ShortcutInfo) tag).container >= 0)) ? R.style.PreloadIcon_Folder
-                        : R.style.PreloadIcon;
+                : R.style.PreloadIcon;
         Theme theme = sPreloaderThemes.get(style);
         if (theme == null) {
             theme = getResources().newTheme();
@@ -680,7 +717,7 @@ public class BubbleTextView extends TextView
      * Returns the start delay when animating between certain {@link FastBitmapDrawable} states.
      */
     private static int getStartDelayForStateChange(final FastBitmapDrawable.State fromState,
-            final FastBitmapDrawable.State toState) {
+                                                   final FastBitmapDrawable.State toState) {
         switch (toState) {
             case NORMAL:
                 switch (fromState) {
