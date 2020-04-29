@@ -42,5 +42,6 @@ public final class FeatureFlags {
 
     // add by candice
     public static boolean LAUNCHER_DISABLE_ALL_APPS = true;
+    public static boolean LAUNCHER_HAS_CUSTOM_LEFT = false;
 
 }

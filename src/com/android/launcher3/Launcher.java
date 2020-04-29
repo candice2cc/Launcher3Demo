@@ -464,6 +464,8 @@ public class Launcher extends Activity
 
         // We only load the page synchronously if the user rotates (or triggers a
         // configuration change) while launcher is in the foreground
+        Log.d(TAG,"workspace padding left:"+mWorkspace.getPaddingLeft());
+
         if (!mModel.startLoader(mWorkspace.getRestorePage())) {
             // If we are not binding synchronously, show a fade in animation when
             // the first page bind completes.
@@ -471,6 +473,8 @@ public class Launcher extends Activity
         } else {
             setWorkspaceLoading(true);
         }
+        Log.d(TAG,"workspace padding left:"+mWorkspace.getPaddingLeft());
+
 
         // For handling default keys
         mDefaultKeySsb = new SpannableStringBuilder();
@@ -619,7 +623,7 @@ public class Launcher extends Activity
         if (mLauncherCallbacks != null) {
             return mLauncherCallbacks.hasCustomContentToLeft();
         }
-        return true;
+        return FeatureFlags.LAUNCHER_HAS_CUSTOM_LEFT;
     }
 
     /**
@@ -1374,6 +1378,7 @@ public class Launcher extends Activity
         mDragLayer = (DragLayer) findViewById(R.id.drag_layer);
         mFocusHandler = mDragLayer.getFocusIndicatorHelper();
         mWorkspace = (Workspace) mDragLayer.findViewById(R.id.workspace);
+        Log.d(TAG,"mWorkspace padding left:"+mWorkspace.getPaddingLeft());
 //        mQsbContainer = mDragLayer.findViewById(mDeviceProfile.isVerticalBarLayout()
 //                ? R.id.workspace_blocked_row : R.id.qsb_container);
 
@@ -3664,6 +3669,7 @@ public class Launcher extends Activity
     @Override
     public void bindScreens(ArrayList<Long> orderedScreenIds) {
         // Make sure the first screen is always at the start.
+
         if (FeatureFlags.QSB_ON_FIRST_SCREEN &&
                 orderedScreenIds.indexOf(Workspace.FIRST_SCREEN_ID) != 0) {
             orderedScreenIds.remove(Workspace.FIRST_SCREEN_ID);
@@ -3688,6 +3694,7 @@ public class Launcher extends Activity
         // then notify to indicate that it can be released and a proper wallpaper offset can be
         // computed before the next layout
         mWorkspace.unlockWallpaperFromDefaultPageOnNextLayout();
+
     }
 
     private void bindAddScreens(ArrayList<Long> orderedScreenIds) {

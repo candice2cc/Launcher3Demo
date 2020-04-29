@@ -92,6 +92,8 @@ public class DeviceProfile {
     public int cellWidthPx;
     public int cellHeightPx;
 
+    public int workspacePaddingLeft;
+
     // Folder
     public int folderBackgroundOffset;
     public int folderIconSizePx;
@@ -130,8 +132,8 @@ public class DeviceProfile {
     private ArrayList<LauncherLayoutChangeListener> mListeners = new ArrayList<>();
 
     public DeviceProfile(Context context, InvariantDeviceProfile inv,
-            Point minSize, Point maxSize,
-            int width, int height, boolean isLandscape) {
+                         Point minSize, Point maxSize,
+                         int width, int height, boolean isLandscape) {
 
         this.inv = inv;
         this.isLandscape = isLandscape;
@@ -225,7 +227,7 @@ public class DeviceProfile {
         Resources res = context.getResources();
         float padding = res.getInteger(R.integer.config_allAppsButtonPaddingPercent) / 100f;
         allAppsButtonVisualSize = (int) (hotseatIconSizePx * (1 - padding)) - context.getResources()
-                        .getDimensionPixelSize(R.dimen.all_apps_button_scale_down);
+                .getDimensionPixelSize(R.dimen.all_apps_button_scale_down);
     }
 
     private void updateAvailableDimensions(DisplayMetrics dm, Resources res) {
@@ -253,6 +255,10 @@ public class DeviceProfile {
         allAppsIconSizePx = iconSizePx;
         allAppsIconDrawablePaddingPx = iconDrawablePaddingPx;
         allAppsIconTextSizePx = iconTextSizePx;
+
+        // TODO 配置化？
+
+        workspacePaddingLeft = Utilities.pxFromDp(52, dm);
 
         cellWidthPx = iconSizePx;
         cellHeightPx = iconSizePx + iconDrawablePaddingPx
@@ -285,8 +291,8 @@ public class DeviceProfile {
 
         final int folderBottomPanelSize =
                 res.getDimensionPixelSize(R.dimen.folder_label_padding_top)
-                 + res.getDimensionPixelSize(R.dimen.folder_label_padding_bottom)
-                + Utilities.calculateTextHeight(res.getDimension(R.dimen.folder_label_text_size));
+                        + res.getDimensionPixelSize(R.dimen.folder_label_padding_bottom)
+                        + Utilities.calculateTextHeight(res.getDimension(R.dimen.folder_label_text_size));
 
         // Don't let the folder get too close to the edges of the screen.
         folderCellWidthPx = Math.min(iconSizePx + 2 * cellPaddingX,
@@ -310,7 +316,9 @@ public class DeviceProfile {
         allAppsNumCols = allAppsNumPredictiveCols = inv.numColumns;
     }
 
-    /** Returns the width and height of the search bar, ignoring any padding. */
+    /**
+     * Returns the width and height of the search bar, ignoring any padding.
+     */
     public Point getSearchBarDimensForWidgetOpts() {
         if (isVerticalBarLayout()) {
             return new Point(dropTargetBarSizePx, availableHeightPx - 2 * edgeMarginPx);
@@ -375,11 +383,15 @@ public class DeviceProfile {
                 int availablePaddingX = Math.max(0, width - (int) ((inv.numColumns * cellWidthPx) +
                         ((inv.numColumns - 1) * gapScale * cellWidthPx)));
                 availablePaddingX = (int) Math.min(availablePaddingX,
-                            width * MAX_HORIZONTAL_PADDING_PERCENT);
+                        width * MAX_HORIZONTAL_PADDING_PERCENT);
                 int availablePaddingY = Math.max(0, height - topWorkspacePadding - paddingBottom
                         - (int) (2 * inv.numRows * cellHeightPx));
-                padding.set(availablePaddingX / 2, topWorkspacePadding + availablePaddingY / 2,
-                        availablePaddingX / 2, paddingBottom + availablePaddingY / 2);
+//                padding.set(availablePaddingX / 2, topWorkspacePadding + availablePaddingY / 2,
+//                        availablePaddingX / 2, paddingBottom + availablePaddingY / 2);
+
+
+                // TODO 临时
+                padding.set(workspacePaddingLeft, topWorkspacePadding + availablePaddingY / 2, workspacePaddingLeft, paddingBottom + availablePaddingY / 2);
             } else {
                 // Pad the top and bottom of the workspace with search/hotseat bar sizes
                 padding.set(desiredWorkspaceLeftRightMarginPx,
@@ -388,9 +400,6 @@ public class DeviceProfile {
                         paddingBottom);
             }
         }
-
-//        padding.set(0, 0,
-//                0, 0);
         return padding;
     }
 
@@ -436,6 +445,7 @@ public class DeviceProfile {
     public static int calculateCellWidth(int width, int countX) {
         return width / countX;
     }
+
     public static int calculateCellHeight(int height, int countY) {
         return height / countY;
     }
@@ -557,7 +567,7 @@ public class DeviceProfile {
 
             int visibleChildCount = getVisibleChildCount(overviewMode);
             int totalItemWidth = visibleChildCount * overviewModeBarItemWidthPx;
-            int maxWidth = totalItemWidth + (visibleChildCount-1) * overviewModeBarSpacerWidthPx;
+            int maxWidth = totalItemWidth + (visibleChildCount - 1) * overviewModeBarSpacerWidthPx;
 
             lp.width = Math.min(availableWidthPx, maxWidth);
             lp.height = getOverviewModeButtonBarHeight();
@@ -595,12 +605,12 @@ public class DeviceProfile {
 
         // No paddings for portrait phone
         if (isPhone && !isVerticalBarLayout()) {
-            return new int[] {0, 0};
+            return new int[]{0, 0};
         }
 
         // In landscape, we match the width of the workspace
         int padding = (pageIndicatorLandGutterRightNavBarPx +
                 hotseatBarHeightPx + hotseatLandGutterPx + mInsets.left) / 2;
-        return new int[]{ padding, padding };
+        return new int[]{padding, padding};
     }
 }
