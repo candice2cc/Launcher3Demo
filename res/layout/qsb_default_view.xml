@@ -19,35 +19,37 @@
              android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/quantum_panel_shape"
+        android:layout_width="464dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:background="@drawable/qsb_shape"
         android:elevation="2dp"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/icon40_googleplay"
+            android:layout_marginRight="12dp"
+            />
         <TextView
             android:layout_width="0dp"
-            android:id="@+id/btn_qsb_search"
-            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_height="20dp"
+            android:text="Search for games and apps..."
+            android:layout_marginRight="24dp"
+            android:textColor="#66000000"
+            android:textSize="11sp"
             android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:text="@string/abandoned_search"
-            android:textColor="@color/quantum_panel_text_color"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground" />
+            />
         <ImageView
-            android:layout_width="48dp"
-            android:id="@+id/btn_qsb_setup"
-            android:clickable="true"
-            android:visibility="gone"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_setting"
-            android:tint="@color/quantum_panel_text_color"
-            android:contentDescription="@string/gadget_setup_text"
-            android:padding="8dp"
-            android:background="?android:attr/selectableItemBackground" />
+            android:id="@+id/btn_qsb_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/selector_button_search"
+            />
     </LinearLayout>
 </FrameLayout>
