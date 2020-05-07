@@ -17,7 +17,7 @@
 <profiles xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
 
     <profile
-        launcher:defaultLayoutId="@xml/default_workspace_5x5"
+        launcher:defaultLayoutId="@xml/default_workspace_4x6"
         launcher:hotseatIconSize="40"
         launcher:iconSize="40"
         launcher:iconTextSize="10"
@@ -26,8 +26,8 @@
         launcher:minWidthDps="426"
         launcher:name="NoxPlayer0"
         launcher:numColumns="6"
-        launcher:numFolderColumns="4"
-        launcher:numFolderRows="4"
+        launcher:numFolderColumns="3"
+        launcher:numFolderRows="2"
         launcher:numHotseatIcons="6"
         launcher:numRows="4" />
 

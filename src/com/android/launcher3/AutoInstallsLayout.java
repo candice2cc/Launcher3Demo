@@ -334,7 +334,6 @@ public class AutoInstallsLayout {
      * App shortcuts: required attributes packageName and className
      */
     protected class AppShortcutParser implements TagParser {
-
         @Override
         public long parseAndAdd(XmlResourceParser parser) {
             final String packageName = getAttributeValue(parser, ATTR_PACKAGE_NAME);
@@ -358,7 +357,7 @@ public class AutoInstallsLayout {
                         .setComponent(cn)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                                 Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-
+                    Log.d(TAG,"add favorite: " +  packageName + "/" + className);
                     return addShortcut(info.loadLabel(mPackageManager).toString(),
                             intent, Favorites.ITEM_TYPE_APPLICATION);
                 } catch (PackageManager.NameNotFoundException e) {
