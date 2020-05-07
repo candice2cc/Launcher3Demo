@@ -96,5 +96,11 @@
         launcher:screen="0"
         launcher:x="2"
         launcher:y="1" />
+    <favorite
+        launcher:packageName="com.vphone.launcher"
+        launcher:className="com.vphone.launcher.Launcher"
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="1" />
 
 </favorites>
