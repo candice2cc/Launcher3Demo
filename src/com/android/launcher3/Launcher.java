@@ -3216,7 +3216,8 @@ public class Launcher extends Activity
                 if (mWorkspace.isInOverviewMode()) {
                     mWorkspace.startReordering(v);
                 } else {
-                    showOverviewMode(true);
+                    // by candice 长按空白处，进入OverviewMode
+//                    showOverviewMode(true);
                 }
             } else {
                 final boolean isAllAppsButton =

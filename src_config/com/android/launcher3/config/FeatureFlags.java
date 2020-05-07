@@ -20,12 +20,13 @@ package com.android.launcher3.config;
  * Defines a set of flags used to control various launcher behaviors
  */
 public final class FeatureFlags {
-    private FeatureFlags() {}
+    private FeatureFlags() {
+    }
 
     // Custom flags go below this
     public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = true;
     // As opposed to the new spring-loaded workspace.
-    public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = false;
+    public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = true; // 长按拖拽icon时，大小不变化模式
     public static boolean LAUNCHER3_LEGACY_FOLDER_ICON = false;
     public static boolean LAUNCHER3_USE_SYSTEM_DRAG_DRIVER = true;
     public static boolean LAUNCHER3_DISABLE_PINCH_TO_OVERVIEW = false;
