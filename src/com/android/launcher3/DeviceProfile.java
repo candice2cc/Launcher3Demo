@@ -295,10 +295,14 @@ public class DeviceProfile {
                         + Utilities.calculateTextHeight(res.getDimension(R.dimen.folder_label_text_size));
 
         // Don't let the folder get too close to the edges of the screen.
-        folderCellWidthPx = Math.min(iconSizePx + 2 * cellPaddingX,
-                (availableWidthPx - 4 * edgeMarginPx) / inv.numFolderColumns);
-        folderCellHeightPx = Math.min(iconSizePx + 3 * cellPaddingY + folderChildTextSize,
-                (availableHeightPx - 4 * edgeMarginPx - folderBottomPanelSize) / inv.numFolderRows);
+
+        // TODO 小分辨率下需要适配
+        folderCellWidthPx = (int) (Utilities.pxFromDp(100, dm) * scale);
+        folderCellHeightPx = (int) (Utilities.pxFromDp(80, dm) * scale);
+//        folderCellWidthPx = Math.min(iconSizePx + 2 * cellPaddingX,
+//                (availableWidthPx - 4 * edgeMarginPx) / inv.numFolderColumns);
+//        folderCellHeightPx = Math.min(iconSizePx + 3 * cellPaddingY + folderChildTextSize,
+//                (availableHeightPx - 4 * edgeMarginPx - folderBottomPanelSize) / inv.numFolderRows);
         folderChildDrawablePaddingPx = Math.max(0,
                 (folderCellHeightPx - iconSizePx - folderChildTextSize) / 3);
 

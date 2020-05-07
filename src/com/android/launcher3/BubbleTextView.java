@@ -29,9 +29,7 @@ import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Environment;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -47,8 +45,6 @@ import com.android.launcher3.custom.AdInfo;
 import com.android.launcher3.folder.FolderIcon;
 import com.android.launcher3.model.PackageItemInfo;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.text.NumberFormat;
 
 /**
