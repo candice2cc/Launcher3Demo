@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2009 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,6 +14,33 @@
 -->
 
 <resources>
-<!-- Container -->
-     <item name="container_margin" format="fraction" type="fraction">12%</item>
+
+    <!-- add by candice begin -->
+    <dimen name="worksapce_padding_left">52dp</dimen>
+    <dimen name="workpace_padding_top">12dp</dimen>
+
+
+    <dimen name="grid_hotseat_height">80dp</dimen>
+    <dimen name="qsb_width">464dp</dimen>
+    <dimen name="qsb_height">36dp</dimen>
+    <dimen name="qsb_padding">12dp</dimen>
+    <dimen name="qsb_icon_size">20dp</dimen>
+    <dimen name="qsb_icon_margin">12dp</dimen>
+    <dimen name="qsb_text_size">11sp</dimen>
+    <dimen name="qsb_text_height">20dp</dimen>
+    <dimen name="qsb_radius">18dp</dimen>
+
+
+    <!-- profile size -->
+
+    <dimen name="icon_size">40dp</dimen>
+    <dimen name="icon_text_size">10dp</dimen>
+
+
+
+
+    <!-- add by candice end -->
+
+    <!-- Container -->
+    <item name="container_margin" format="fraction" type="fraction">12%</item>
 </resources>

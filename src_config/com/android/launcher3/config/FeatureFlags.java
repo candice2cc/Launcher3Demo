@@ -26,7 +26,7 @@ public final class FeatureFlags {
     // Custom flags go below this
     public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = true; // icon不需要缩放处理
     // As opposed to the new spring-loaded workspace.
-    public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = true; // 长按拖拽icon时，大小不变化模式
+    public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = true; // 长按拖拽icon时，窗口大小不变化模式
     public static boolean LAUNCHER3_LEGACY_FOLDER_ICON = false;
     public static boolean LAUNCHER3_USE_SYSTEM_DRAG_DRIVER = true;
     public static boolean LAUNCHER3_DISABLE_PINCH_TO_OVERVIEW = false;

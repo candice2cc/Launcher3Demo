@@ -18,6 +18,6 @@
        android:shape="rectangle">
     <solid android:color="#fff" />
     <corners
-        android:radius="18dp" />
+        android:radius="@dimen/qsb_radius" />
 
 </shape>

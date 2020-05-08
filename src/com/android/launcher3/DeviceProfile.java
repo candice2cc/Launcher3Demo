@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.android.launcher3.config.FeatureFlags;
 import java.util.ArrayList;
 
 public class DeviceProfile {
+    private final static String TAG = "DeviceProfile";
 
     public interface LauncherLayoutChangeListener {
         void onLauncherLayoutChanged();
@@ -92,7 +94,9 @@ public class DeviceProfile {
     public int cellWidthPx;
     public int cellHeightPx;
 
+    // edit by candice
     public int workspacePaddingLeft;
+    public int workspacePaddingTop;
 
     // Folder
     public int folderBackgroundOffset;
@@ -182,7 +186,7 @@ public class DeviceProfile {
         dropTargetBarSizePx = res.getDimensionPixelSize(R.dimen.dynamic_grid_drop_target_size);
         workspaceSpringLoadedBottomSpace =
                 res.getDimensionPixelSize(R.dimen.dynamic_grid_min_spring_loaded_space);
-        hotseatBarHeightPx = res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_height);
+
         hotseatBarTopPaddingPx =
                 res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_top_padding);
         hotseatLandGutterPx = res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_gutter_width);
@@ -202,9 +206,13 @@ public class DeviceProfile {
             availableHeightPx = maxSize.y;
         }
 
+        //edit by candice
+        updateAutoDimemsions(dm,res);
+
         // Calculate the remaining vars
         updateAvailableDimensions(dm, res);
         computeAllAppsButtonSize(context);
+
     }
 
     public void addLauncherLayoutChangedListener(LauncherLayoutChangeListener listener) {
@@ -230,7 +238,7 @@ public class DeviceProfile {
                         .getDimensionPixelSize(R.dimen.all_apps_button_scale_down);
     }
 
-    private void updateAvailableDimensions(DisplayMetrics dm, Resources res) {
+    public void updateAvailableDimensions(DisplayMetrics dm, Resources res) {
         // Check to see if the icons fit in the new available height.  If not, then we need to
         // shrink the icon size.
         float scale = 1f;
@@ -248,22 +256,23 @@ public class DeviceProfile {
 
     private void updateIconSize(float scale, int drawablePadding, Resources res,
                                 DisplayMetrics dm) {
-        iconSizePx = (int) (Utilities.pxFromDp(inv.iconSize, dm) * scale);
-        iconTextSizePx = (int) (Utilities.pxFromSp(inv.iconTextSize, dm) * scale);
+        iconSizePx = (int) (iconSizePx * scale);
+        iconTextSizePx = (int) (iconTextSizePx * scale);
         iconDrawablePaddingPx = drawablePadding;
-        hotseatIconSizePx = (int) (Utilities.pxFromDp(inv.hotseatIconSize, dm) * scale);
+        hotseatIconSizePx = (int) (iconSizePx * scale);
         allAppsIconSizePx = iconSizePx;
         allAppsIconDrawablePaddingPx = iconDrawablePaddingPx;
         allAppsIconTextSizePx = iconTextSizePx;
 
-        // TODO 配置化？
-
-        // edit by candice: 定义左侧padding
-        workspacePaddingLeft = Utilities.pxFromDp(52, dm);
 
         cellWidthPx = iconSizePx;
         cellHeightPx = iconSizePx + iconDrawablePaddingPx
                 + Utilities.calculateTextHeight(iconTextSizePx);
+//        // TODO
+        int fix = (int) (Utilities.pxFromDp(7, dm) * scale);
+        cellHeightPx = iconSizePx + iconDrawablePaddingPx
+                + Utilities.calculateTextHeight(iconTextSizePx) + fix;
+
         final float scaleDps = !FeatureFlags.LAUNCHER3_LEGACY_WORKSPACE_DND ? 0f
                 : res.getDimensionPixelSize(R.dimen.dragViewScale);
         dragViewScale = (iconSizePx + scaleDps) / iconSizePx;
@@ -299,8 +308,8 @@ public class DeviceProfile {
 
         // TODO 小分辨率下需要考虑适配
         // edit by candice: 文件夹单元格尺寸 100 * 80
-        folderCellWidthPx = (int) (Utilities.pxFromDp(100, dm) * scale);
-        folderCellHeightPx = (int) (Utilities.pxFromDp(80, dm) * scale);
+        folderCellWidthPx = res.getDimensionPixelSize(R.dimen.folder_cell_width);
+        folderCellHeightPx = res.getDimensionPixelSize(R.dimen.folder_cell_height);
 //        folderCellWidthPx = Math.min(iconSizePx + 2 * cellPaddingX,
 //                (availableWidthPx - 4 * edgeMarginPx) / inv.numFolderColumns);
 //        folderCellHeightPx = Math.min(iconSizePx + 3 * cellPaddingY + folderChildTextSize,
@@ -312,6 +321,23 @@ public class DeviceProfile {
         folderBackgroundOffset = -edgeMarginPx;
         folderIconSizePx = iconSizePx + 2 * -folderBackgroundOffset;
         folderIconPreviewPadding = res.getDimensionPixelSize(R.dimen.folder_preview_padding);
+    }
+
+    /**
+     * add by candice
+     * 自动更新尺寸，例如：响应横竖屏适配
+     * @param dm
+     * @param res
+     */
+    public void updateAutoDimemsions(DisplayMetrics dm, Resources res){
+        // edit by candice: 横竖屏变化的值
+        workspacePaddingLeft = res.getDimensionPixelSize(R.dimen.worksapce_padding_left);
+        workspacePaddingTop = res.getDimensionPixelSize(R.dimen.workpace_padding_top);
+
+        iconSizePx = res.getDimensionPixelSize(R.dimen.icon_size);
+        iconTextSizePx = res.getDimensionPixelSize(R.dimen.icon_text_size);
+
+        hotseatBarHeightPx = res.getDimensionPixelSize(R.dimen.grid_hotseat_height);
     }
 
     public void updateInsets(Rect insets) {
@@ -404,6 +430,7 @@ public class DeviceProfile {
                         paddingBottom);
             }
         }
+        Log.d(TAG,"padding:"+padding);
         return padding;
     }
 
@@ -454,9 +481,12 @@ public class DeviceProfile {
     }
 
     /**
+     * edit by candice：总是返回false
+     *
      * When {@code true}, the device is in landscape mode and the hotseat is on the right column.
      * When {@code false}, either device is in portrait mode or the device is in landscape mode and
      * the hotseat is on the bottom row.
+     *
      */
     public boolean isVerticalBarLayout() {
         return isLandscape && transposeLayoutWithOrientation;

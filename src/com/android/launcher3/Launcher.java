@@ -46,6 +46,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -65,6 +66,7 @@ import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.TextKeyListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.HapticFeedbackConstants;
@@ -401,6 +403,12 @@ public class Launcher extends Activity
                 == Configuration.ORIENTATION_LANDSCAPE ?
                 app.getInvariantDeviceProfile().landscapeProfile
                 : app.getInvariantDeviceProfile().portraitProfile;
+
+        // edit by candice：因为LauncherAppState单例模式，因此自动需要计算的尺寸再次更新
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        mDeviceProfile.updateAutoDimemsions(dm, res);
+        mDeviceProfile.updateAvailableDimensions(dm,res);
 
         mSharedPrefs = Utilities.getPrefs(this);
         mIsSafeModeEnabled = getPackageManager().isSafeMode();
