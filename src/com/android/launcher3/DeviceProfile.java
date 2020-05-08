@@ -269,9 +269,9 @@ public class DeviceProfile {
         cellHeightPx = iconSizePx + iconDrawablePaddingPx
                 + Utilities.calculateTextHeight(iconTextSizePx);
 //        // TODO
-        int fix = (int) (Utilities.pxFromDp(7, dm) * scale);
-        cellHeightPx = iconSizePx + iconDrawablePaddingPx
-                + Utilities.calculateTextHeight(iconTextSizePx) + fix;
+//        int fix = (int) (Utilities.pxFromDp(7, dm) * scale);
+//        cellHeightPx = iconSizePx + iconDrawablePaddingPx
+//                + Utilities.calculateTextHeight(iconTextSizePx) + fix;
 
         final float scaleDps = !FeatureFlags.LAUNCHER3_LEGACY_WORKSPACE_DND ? 0f
                 : res.getDimensionPixelSize(R.dimen.dragViewScale);
