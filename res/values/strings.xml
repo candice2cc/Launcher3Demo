@@ -23,10 +23,13 @@
 
     <!-- NoxLauncher -->
 
+
     <string name="folder_tools">Tools</string>
     <string name="app_info">App Info</string>
     <string name="export_apk">Export APK</string>
     <string name="uninstall">Uninstall</string>
+
+    <string name="search_hint">Search for games and apps...</string>
 
 
     <!-- Application name -->
