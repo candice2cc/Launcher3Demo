@@ -38,7 +38,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.launcher3.BubbleTextView;
@@ -176,7 +178,63 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         });
     }
 
-    /** Updates the child of this container at the given index based on the given shortcut info. */
+    public void populateAndShow2(BubbleTextView originalIcon) {
+        final Resources resources = getResources();
+        final int arrowWidth = resources.getDimensionPixelSize(R.dimen.deep_shortcuts_arrow_width);
+        final int arrowHeight = resources.getDimensionPixelSize(R.dimen.deep_shortcuts_arrow_height);
+        final int arrowHorizontalOffset = resources.getDimensionPixelSize(
+                R.dimen.deep_shortcuts_arrow_horizontal_offset);
+        final int arrowVerticalOffset = resources.getDimensionPixelSize(
+                R.dimen.deep_shortcuts_arrow_vertical_offset);
+
+        // Add dummy views first, and populate with real shortcut info when ready.
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.deep_shortcuts_spacing);
+        final LayoutInflater inflater = mLauncher.getLayoutInflater();
+        int numShortcuts = 3;
+        for (int i = 0; i < numShortcuts; i++) {
+            final DeepShortcutView shortcut =
+                    (DeepShortcutView) inflater.inflate(R.layout.deep_shortcut2, this, false);
+            if (i < numShortcuts - 1) {
+                ((LayoutParams) shortcut.getLayoutParams()).bottomMargin = spacing;
+            }
+            shortcut.getBubbleText().setAccessibilityDelegate(mAccessibilityDelegate);
+            addView(shortcut);
+            // TODO 整理及配置化
+            if (i == 0) {
+                shortcut.getBubbleText().setText(R.string.app_info);
+                ((ImageView) shortcut.getIconView()).setImageResource(R.drawable.icon40_info);
+                shortcut.setBackgroundResource(R.drawable.selector_deep_short_top);
+            } else if (i == 1) {
+                shortcut.getBubbleText().setText(R.string.export_apk);
+                ((ImageView) shortcut.getIconView()).setImageResource(R.drawable.icon40_exportapk);
+                shortcut.setBackgroundResource(R.drawable.selector_deep_short);
+            } else {
+                shortcut.getBubbleText().setText(R.string.uninstall);
+                ((ImageView) shortcut.getIconView()).setImageResource(R.drawable.icon40_uninstall);
+                shortcut.setBackgroundResource(R.drawable.selector_deep_short_bottom);
+
+            }
+        }
+        setContentDescription(getContext().getString(R.string.shortcuts_menu_description,
+                numShortcuts, originalIcon.getContentDescription().toString()));
+
+        measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        orientAboutIcon(originalIcon, arrowHeight + arrowVerticalOffset);
+
+        // Add the arrow.
+        mArrow = addArrowView(arrowHorizontalOffset, arrowVerticalOffset, arrowWidth, arrowHeight);
+        mArrow.setPivotX(arrowWidth / 2);
+        mArrow.setPivotY(mIsAboveIcon ? 0 : arrowHeight);
+
+        animateOpen2();
+
+        deferDrag(originalIcon);
+    }
+
+
+    /**
+     * Updates the child of this container at the given index based on the given shortcut info.
+     */
     private class UpdateShortcutChild implements Runnable {
         private int mShortcutChildIndex;
         private UnbadgedShortcutInfo mShortcutChildInfo;
@@ -206,6 +264,33 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         return getChildCount() - 1;
     }
 
+    private void animateOpen2() {
+        setVisibility(View.VISIBLE);
+        setAlpha(0f);
+        mIsOpen = true;
+        final AnimatorSet shortcutAnims = LauncherAnimUtils.createAnimatorSet();
+        Animator fadeAnim = new LauncherViewPropertyAnimator(this).alpha(1);
+        fadeAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        // We want the shortcut to be fully opaque before the arrow starts animating.
+        fadeAnim.setDuration(400);
+        shortcutAnims.play(fadeAnim);
+
+        shortcutAnims.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mOpenCloseAnimator = null;
+                Utilities.sendCustomAccessibilityEvent(
+                        DeepShortcutsContainer.this,
+                        AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
+                        getContext().getString(R.string.action_deep_shortcut));
+            }
+        });
+
+        mOpenCloseAnimator = shortcutAnims;
+        shortcutAnims.start();
+    }
+
+
     private void animateOpen() {
         setVisibility(View.VISIBLE);
         mIsOpen = true;
@@ -224,6 +309,8 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
         // Animate shortcuts
         DecelerateInterpolator interpolator = new DecelerateInterpolator();
+
+
         for (int i = 0; i < shortcutCount; i++) {
             final DeepShortcutView deepShortcutView = getShortcutAt(i);
             deepShortcutView.setVisibility(INVISIBLE);
@@ -273,13 +360,13 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     /**
      * Orients this container above or below the given icon, aligning with the left or right.
-     *
+     * <p>
      * These are the preferred orientations, in order (RTL prefers right-aligned over left):
      * - Above and left-aligned
      * - Above and right-aligned
      * - Below and left-aligned
      * - Below and right-aligned
-     *
+     * <p>
      * So we always align left if there is enough horizontal space
      * and align above if there is enough vertical space.
      */
@@ -347,8 +434,9 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     /**
      * Adds an arrow view pointing at the original icon.
+     *
      * @param horizontalOffset the horizontal offset of the arrow, so that it
-     *                              points at the center of the original icon
+     *                         points at the center of the original icon
      */
     private View addArrowView(int horizontalOffset, int verticalOffset, int width, int height) {
         LinearLayout.LayoutParams layoutParams = new LayoutParams(width, height);
@@ -386,7 +474,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     /**
      * Determines when the deferred drag should be started.
-     *
+     * <p>
      * Current behavior:
      * - Start the drag if the touch passes a certain distance from the original touch down.
      */
@@ -483,7 +571,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     @Override
     public void onDropCompleted(View target, DropTarget.DragObject d, boolean isFlingToDelete,
-            boolean success) {
+                                boolean success) {
         if (!success) {
             d.dragView.remove();
             mLauncher.showWorkspace(true);
@@ -632,6 +720,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     /**
      * Shows the shortcuts container for {@param icon}
+     *
      * @return the container if shown or null.
      */
     public static DeepShortcutsContainer showForIcon(BubbleTextView icon) {
@@ -655,6 +744,25 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         return null;
     }
 
+    public static DeepShortcutsContainer showForOperation(BubbleTextView icon) {
+        Launcher launcher = Launcher.getLauncher(icon.getContext());
+        if (launcher.getOpenShortcutsContainer() != null) {
+            // There is already a shortcuts container open, so don't open this one.
+            icon.clearFocus();
+            return null;
+        }
+        // There are shortcuts associated with the app, so defer its drag.
+        final DeepShortcutsContainer container =
+                (DeepShortcutsContainer) launcher.getLayoutInflater().inflate(
+                        R.layout.deep_shortcuts_container, launcher.getDragLayer(), false);
+        container.setVisibility(View.INVISIBLE);
+        launcher.getDragLayer().addView(container);
+        container.populateAndShow2(icon);
+        return container;
+
+
+    }
+
     /**
      * Extension of {@link ShortcutInfo} which does not badge the icons.
      */
@@ -668,7 +776,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
         @Override
         protected Bitmap getBadgedIcon(Bitmap unbadgedBitmap, ShortcutInfoCompat shortcutInfo,
-                IconCache cache, Context context) {
+                                       IconCache cache, Context context) {
             return unbadgedBitmap;
         }
     }

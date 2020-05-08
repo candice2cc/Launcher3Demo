@@ -14,17 +14,8 @@
      limitations under the License.
 -->
 
-<com.android.launcher3.shortcuts.DeepShortcutsContainer
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/deep_shortcuts_container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    android:elevation="@dimen/deep_shortcuts_elevation"
-    android:orientation="vertical">
-
-
-</com.android.launcher3.shortcuts.DeepShortcutsContainer>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <solid android:color="#FFFFFF" />
+    <corners android:topLeftRadius="@dimen/bg_pill_radius" android:topRightRadius="@dimen/bg_pill_radius"/>
+</shape>

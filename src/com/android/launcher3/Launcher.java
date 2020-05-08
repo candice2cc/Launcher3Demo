@@ -3229,11 +3229,17 @@ public class Launcher extends Activity
                     DragOptions dragOptions = new DragOptions();
                     if (itemUnderLongClick instanceof BubbleTextView) {
                         BubbleTextView icon = (BubbleTextView) itemUnderLongClick;
-                        if (icon.hasDeepShortcuts()) {
-                            DeepShortcutsContainer dsc = DeepShortcutsContainer.showForIcon(icon);
-                            if (dsc != null) {
-                                dragOptions.deferDragCondition = dsc.createDeferDragCondition(null);
-                            }
+                        // TODO
+
+//                        if (icon.hasDeepShortcuts()) {
+//                            DeepShortcutsContainer dsc = DeepShortcutsContainer.showForIcon(icon);
+//                            if (dsc != null) {
+//                                dragOptions.deferDragCondition = dsc.createDeferDragCondition(null);
+//                            }
+//                        }
+                        DeepShortcutsContainer dsc = DeepShortcutsContainer.showForOperation(icon);
+                        if(dsc != null){
+                            dragOptions.deferDragCondition = dsc.createDeferDragCondition(null);
                         }
                     }
 
