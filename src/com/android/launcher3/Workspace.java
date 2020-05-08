@@ -122,20 +122,15 @@ public class Workspace extends PagedView
     private long mCustomContentShowTime = -1;
 
     private LayoutTransition mLayoutTransition;
-    @Thunk
-    final WallpaperManager mWallpaperManager;
+    @Thunk final WallpaperManager mWallpaperManager;
 
     private ShortcutAndWidgetContainer mDragSourceInternal;
 
-    @Thunk
-    LongArrayMap<CellLayout> mWorkspaceScreens = new LongArrayMap<>();
-    @Thunk
-    ArrayList<Long> mScreenOrder = new ArrayList<Long>();
+    @Thunk LongArrayMap<CellLayout> mWorkspaceScreens = new LongArrayMap<>();
+    @Thunk ArrayList<Long> mScreenOrder = new ArrayList<Long>();
 
-    @Thunk
-    Runnable mRemoveEmptyScreenRunnable;
-    @Thunk
-    boolean mDeferRemoveExtraEmptyScreen = false;
+    @Thunk Runnable mRemoveEmptyScreenRunnable;
+    @Thunk boolean mDeferRemoveExtraEmptyScreen = false;
 
     /**
      * CellInfo for the cell that is currently being dragged
@@ -145,8 +140,7 @@ public class Workspace extends PagedView
     /**
      * Target drop area calculated during last acceptDrop call.
      */
-    @Thunk
-    int[] mTargetCell = new int[2];
+    @Thunk int[] mTargetCell = new int[2];
     private int mDragOverX = -1;
     private int mDragOverY = -1;
 
@@ -158,8 +152,7 @@ public class Workspace extends PagedView
     /**
      * The CellLayout that is currently being dragged over
      */
-    @Thunk
-    CellLayout mDragTargetLayout = null;
+    @Thunk CellLayout mDragTargetLayout = null;
     /**
      * The CellLayout that we will show as highlighted
      */
@@ -170,19 +163,15 @@ public class Workspace extends PagedView
      */
     private CellLayout mDropToLayout = null;
 
-    @Thunk
-    Launcher mLauncher;
-    @Thunk
-    IconCache mIconCache;
-    @Thunk
-    DragController mDragController;
+    @Thunk Launcher mLauncher;
+    @Thunk IconCache mIconCache;
+    @Thunk DragController mDragController;
 
     // These are temporary variables to prevent having to allocate a new object just to
     // return an (x, y) value from helper functions. Do NOT use them to maintain other state.
     private static final Rect sTempRect = new Rect();
     private final int[] mTempXY = new int[2];
-    @Thunk
-    float[] mDragViewVisualCenter = new float[2];
+    @Thunk float[] mDragViewVisualCenter = new float[2];
     private float[] mTempCellLayoutCenterCoordinates = new float[2];
     private int[] mTempVisiblePagesRange = new int[2];
     private Matrix mTempMatrix = new Matrix();
@@ -594,6 +583,7 @@ public class Workspace extends PagedView
     }
 
     private int getEmbeddedQsbId() {
+        // edit by candice：固定qsb_container
         return R.id.qsb_container;
 //        return mLauncher.getDeviceProfile().isVerticalBarLayout()
 //                ? R.id.qsb_container : R.id.workspace_blocked_row;
@@ -647,6 +637,7 @@ public class Workspace extends PagedView
 //                            ? R.layout.qsb_container : R.layout.qsb_blocker_view,
 //                    firstPage, false);
 
+            // edit by candice：固定qsb_container
             qsb = mLauncher.getLayoutInflater().inflate(
                     R.layout.qsb_container,
                     firstPage, false);
@@ -2542,6 +2533,7 @@ public class Workspace extends PagedView
     boolean createUserFolderIfNecessary(View newView, long container, CellLayout target,
                                         int[] targetCell, float distance, boolean external, DragView dragView,
                                         Runnable postAnimationRunnable) {
+        // edit by candice:如果容器是HOTSEAT的容器，则不允许创建文件夹
         if (container == LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
             return false;
         }

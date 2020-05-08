@@ -123,7 +123,6 @@ public class BubbleTextView extends TextView
         int defaultIconSize = grid.iconSizePx;
         if (display == DISPLAY_WORKSPACE) {
             setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
-
         } else if (display == DISPLAY_ALL_APPS) {
             setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.allAppsIconTextSizePx);
             setCompoundDrawablePadding(grid.allAppsIconDrawablePaddingPx);
@@ -161,7 +160,7 @@ public class BubbleTextView extends TextView
     }
 
     public void applyFromShortcutInfo(ShortcutInfo info, IconCache iconCache,
-                                      boolean promiseStateChanged) {
+            boolean promiseStateChanged) {
         applyIconAndLabel(info.getIcon(iconCache), info);
         setTag(info);
         if (promiseStateChanged || info.isPromise()) {
@@ -179,6 +178,11 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
+    /**
+     * edit by candice:
+     * 增加方法，满足广告位需求场景，对应applyFromApplicationInfo
+     * @param info
+     */
     public void applyFromAdAppInfo(AdInfo info) {
         // TODO
         Drawable iconDrawable = getContext().getDrawable(R.drawable.icon_test);
@@ -201,16 +205,13 @@ public class BubbleTextView extends TextView
         verifyHighRes();
     }
 
-
     private void applyIconAndLabel(Bitmap icon, ItemInfo info) {
         FastBitmapDrawable iconDrawable = mLauncher.createIconDrawable(icon);
         if (info.isDisabled()) {
             iconDrawable.setState(FastBitmapDrawable.State.DISABLED);
         }
-
         setIcon(iconDrawable);
         setText(info.title);
-
         if (info.contentDescription != null) {
             setContentDescription(info.isDisabled()
                     ? getContext().getString(R.string.disabled_app_label, info.contentDescription)
@@ -412,7 +413,7 @@ public class BubbleTextView extends TextView
             final int scrollY = getScrollY();
 
             if (mBackgroundSizeChanged) {
-                background.setBounds(0, 0, getRight() - getLeft(), getBottom() - getTop());
+                background.setBounds(0, 0,  getRight() - getLeft(), getBottom() - getTop());
                 mBackgroundSizeChanged = false;
             }
 
@@ -514,8 +515,8 @@ public class BubbleTextView extends TextView
                             info.getInstallProgress() : 0)) : 100;
 
             setContentDescription(progressLevel > 0 ?
-                    getContext().getString(R.string.app_downloading_title, info.title,
-                            NumberFormat.getPercentInstance().format(progressLevel * 0.01)) :
+                getContext().getString(R.string.app_downloading_title, info.title,
+                        NumberFormat.getPercentInstance().format(progressLevel * 0.01)) :
                     getContext().getString(R.string.app_waiting_download_title, info.title));
 
             if (mIcon != null) {
@@ -539,7 +540,7 @@ public class BubbleTextView extends TextView
         Object tag = getTag();
         int style = ((tag != null) && (tag instanceof ShortcutInfo) &&
                 (((ShortcutInfo) tag).container >= 0)) ? R.style.PreloadIcon_Folder
-                : R.style.PreloadIcon;
+                        : R.style.PreloadIcon;
         Theme theme = sPreloaderThemes.get(style);
         if (theme == null) {
             theme = getResources().newTheme();
@@ -686,7 +687,7 @@ public class BubbleTextView extends TextView
      * Returns the start delay when animating between certain {@link FastBitmapDrawable} states.
      */
     private static int getStartDelayForStateChange(final FastBitmapDrawable.State fromState,
-                                                   final FastBitmapDrawable.State toState) {
+            final FastBitmapDrawable.State toState) {
         switch (toState) {
             case NORMAL:
                 switch (fromState) {

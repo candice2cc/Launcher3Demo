@@ -129,11 +129,9 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     private final Alarm mReorderAlarm = new Alarm();
     private final Alarm mOnExitAlarm = new Alarm();
     private final Alarm mOnScrollHintAlarm = new Alarm();
-    @Thunk
-    final Alarm mScrollPauseAlarm = new Alarm();
+    @Thunk final Alarm mScrollPauseAlarm = new Alarm();
 
-    @Thunk
-    final ArrayList<View> mItemsInReadingOrder = new ArrayList<View>();
+    @Thunk final ArrayList<View> mItemsInReadingOrder = new ArrayList<View>();
 
     private final int mExpandDuration;
     private final int mMaterialExpandDuration;
@@ -145,11 +143,9 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     protected DragController mDragController;
     public FolderInfo mInfo;
 
-    @Thunk
-    FolderIcon mFolderIcon;
+    @Thunk FolderIcon mFolderIcon;
 
-    @Thunk
-    FolderPagedView mContent;
+    @Thunk FolderPagedView mContent;
     public ExtendedEditText mFolderName;
     private PageIndicatorDots mPageIndicator;
 
@@ -157,8 +153,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     private int mFooterHeight, mHeaderHeight;
 
     // Cell ranks used for drag and drop
-    @Thunk
-    int mTargetRank, mPrevTargetRank, mEmptyCellRank;
+    @Thunk int mTargetRank, mPrevTargetRank, mEmptyCellRank;
 
     @ViewDebug.ExportedProperty(category = "launcher",
             mapping = {
@@ -167,8 +162,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                     @ViewDebug.IntToString(from = STATE_ANIMATING, to = "STATE_ANIMATING"),
                     @ViewDebug.IntToString(from = STATE_OPEN, to = "STATE_OPEN"),
             })
-    @Thunk
-    int mState = STATE_NONE;
+    @Thunk int mState = STATE_NONE;
     @ViewDebug.ExportedProperty(category = "launcher")
     private boolean mRearrangeOnClose = false;
     boolean mItemsInvalidated = false;
@@ -178,27 +172,22 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     private boolean mDeleteFolderOnDropCompleted = false;
     private boolean mSuppressFolderDeletion = false;
     private boolean mItemAddedBackToSelfViaIcon = false;
-    @Thunk
-    float mFolderIconPivotX;
-    @Thunk
-    float mFolderIconPivotY;
+    @Thunk float mFolderIconPivotX;
+    @Thunk float mFolderIconPivotY;
     private boolean mIsEditingName = false;
 
     @ViewDebug.ExportedProperty(category = "launcher")
     private boolean mDestroyed;
 
-    @Thunk
-    Runnable mDeferredAction;
+    @Thunk Runnable mDeferredAction;
     private boolean mDeferDropAfterUninstall;
     private boolean mUninstallSuccessful;
 
     // Folder scrolling
     private int mScrollAreaOffset;
 
-    @Thunk
-    int mScrollHintDir = DragController.SCROLL_NONE;
-    @Thunk
-    int mCurrentScrollDir = DragController.SCROLL_NONE;
+    @Thunk int mScrollHintDir = DragController.SCROLL_NONE;
+    @Thunk int mCurrentScrollDir = DragController.SCROLL_NONE;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -274,6 +263,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                 InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
         mFooter = findViewById(R.id.folder_footer);
+        // edit by candice: 参考Footer设计，使用Header布局
         mHeader = findViewById(R.id.folder_header);
 
         // We find out how tall footer wants to be (it is set to wrap_content), so that
@@ -582,8 +572,8 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
             int width = getPaddingLeft() + getPaddingRight() + mContent.getDesiredWidth();
             int height = getFolderHeight();
 
-            float transX = -0.075f * (width / 2 - getPivotX());
-            float transY = -0.075f * (height / 2 - getPivotY());
+            float transX = - 0.075f * (width / 2 - getPivotX());
+            float transY = - 0.075f * (height / 2 - getPivotY());
             setTranslationX(transX);
             setTranslationY(transY);
             PropertyValuesHolder tx = PropertyValuesHolder.ofFloat(TRANSLATION_X, transX, 0);
@@ -642,7 +632,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                         mContent.getAccessibilityDescription());
                 mState = STATE_ANIMATING;
             }
-
             @Override
             public void onAnimationEnd(Animator animation) {
                 mState = STATE_OPEN;
@@ -657,7 +646,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
             int footerWidth = mContent.getDesiredWidth()
                     - mFooter.getPaddingLeft() - mFooter.getPaddingRight();
 
-            float textWidth = mFolderName.getPaint().measureText(mFolderName.getText().toString());
+            float textWidth =  mFolderName.getPaint().measureText(mFolderName.getText().toString());
             float translation = (footerWidth - textWidth) / 2;
             mFolderName.setTranslationX(mContent.mIsRtl ? -translation : translation);
             mPageIndicator.prepareEntryAnimation();
@@ -671,11 +660,11 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mFolderName.animate().setDuration(FOLDER_NAME_ANIMATION_DURATION)
-                            .translationX(0)
-                            .setInterpolator(Utilities.ATLEAST_LOLLIPOP ?
-                                    AnimationUtils.loadInterpolator(mLauncher,
-                                            android.R.interpolator.fast_out_slow_in)
-                                    : new LogDecelerateInterpolator(100, 0));
+                        .translationX(0)
+                        .setInterpolator(Utilities.ATLEAST_LOLLIPOP ?
+                                AnimationUtils.loadInterpolator(mLauncher,
+                                        android.R.interpolator.fast_out_slow_in)
+                                : new LogDecelerateInterpolator(100, 0));
                     mPageIndicator.playEntryAnimation();
 
                     if (updateAnimationFlag) {
@@ -717,7 +706,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                 setLayerType(LAYER_TYPE_NONE, null);
                 close(true);
             }
-
             @Override
             public void onAnimationStart(Animator animation) {
                 Utilities.sendCustomAccessibilityEvent(
@@ -766,7 +754,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         return ((itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION ||
                 itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT ||
                 itemType == LauncherSettings.Favorites.ITEM_TYPE_DEEP_SHORTCUT) &&
-                !isFull());
+                    !isFull());
     }
 
     public void onDragEnter(DragObject d) {
@@ -800,8 +788,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
                 (int) recycle[0] - getPaddingLeft(), (int) recycle[1] - getPaddingTop());
     }
 
-    @Thunk
-    void onDragOver(DragObject d, int reorderDelay) {
+    @Thunk void onDragOver(DragObject d, int reorderDelay) {
         if (mScrollPauseAlarm.alarmPending()) {
             return;
         }
@@ -914,15 +901,15 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     }
 
     public void onDropCompleted(final View target, final DragObject d,
-                                final boolean isFlingToDelete, final boolean success) {
+            final boolean isFlingToDelete, final boolean success) {
         if (mDeferDropAfterUninstall) {
             Log.d(TAG, "Deferred handling drop because waiting for uninstall.");
             mDeferredAction = new Runnable() {
-                public void run() {
-                    onDropCompleted(target, d, isFlingToDelete, success);
-                    mDeferredAction = null;
-                }
-            };
+                    public void run() {
+                        onDropCompleted(target, d, isFlingToDelete, success);
+                        mDeferredAction = null;
+                    }
+                };
             return;
         }
 
@@ -1071,7 +1058,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         // We need to bound the folder to the currently visible workspace area
         mLauncher.getWorkspace().getPageAreaRelativeToDragLayer(sTempRect);
         int left = Math.min(Math.max(sTempRect.left, centeredLeft),
-                sTempRect.right - width);
+                sTempRect.right- width);
         int top = Math.min(Math.max(sTempRect.top, centeredTop),
                 sTempRect.bottom - height);
 
@@ -1122,6 +1109,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
 
     private int getContentAreaHeight() {
         DeviceProfile grid = mLauncher.getDeviceProfile();
+        // edit by candice:计算高度修改，减去Header占用的高度
         int maxContentAreaHeight = grid.availableHeightPx
                 - grid.getTotalWorkspacePadding().y - mFooterHeight - mHeaderHeight;
         int height = Math.min(maxContentAreaHeight,
@@ -1138,6 +1126,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     }
 
     private int getFolderHeight(int contentAreaHeight) {
+        // edit by candice:文件夹高度重新计算
         return getPaddingTop() + getPaddingBottom() + contentAreaHeight + mFooterHeight + mHeaderHeight;
     }
 
@@ -1162,6 +1151,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         mFooter.measure(contentAreaWidthSpec,
                 MeasureSpec.makeMeasureSpec(mFooterHeight, MeasureSpec.EXACTLY));
 
+        // edit by candice
         mHeader.measure(contentAreaWidthSpec,
                 MeasureSpec.makeMeasureSpec(mHeaderHeight, MeasureSpec.EXACTLY));
 
@@ -1281,7 +1271,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     }
 
     public void onDrop(DragObject d) {
-        Log.d(TAG, "onDrop");
         Runnable cleanUpRunnable = null;
 
         // If we are coming from All Apps space, we defer removing the extra empty screen
@@ -1384,7 +1373,6 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         View v = getViewForInfo(info);
         v.setVisibility(INVISIBLE);
     }
-
     public void showItem(ShortcutInfo info) {
         View v = getViewForInfo(info);
         v.setVisibility(VISIBLE);

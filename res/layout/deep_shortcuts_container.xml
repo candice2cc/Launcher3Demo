@@ -26,5 +26,4 @@
     android:elevation="@dimen/deep_shortcuts_elevation"
     android:orientation="vertical">
 
-
 </com.android.launcher3.shortcuts.DeepShortcutsContainer>

@@ -64,10 +64,16 @@ public class DeleteDropTarget extends ButtonDropTarget {
 
     @Override
     protected boolean supportsDrop(DragSource source, ItemInfo info) {
-
+        // edit by candice:增加判断逻辑
         return willAcceptDrop(info);
     }
 
+    /**
+     * edit by candice:
+     * 增加方法，判断是否可以drop
+     * @param info
+     * @return
+     */
     public static boolean willAcceptDrop(Object info) {
         //添加 @{
         if (LauncherAppState.isDisableAllApps()) {
@@ -81,38 +87,6 @@ public class DeleteDropTarget extends ButtonDropTarget {
         return (info instanceof ShortcutInfo)
                 || (info instanceof LauncherAppWidgetInfo)
                 || (info instanceof FolderInfo);
-
-
-//        if (info instanceof ItemInfo) {
-//            ItemInfo item = (ItemInfo) info;
-//            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPWIDGET ||
-//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) {
-//                return true;
-//            }
-//
-//            if (!LauncherAppState.isDisableAllApps() &&
-//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_FOLDER) {
-//                return true;
-//            }
-//
-//            if (!LauncherAppState.isDisableAllApps() &&
-//                    item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
-//                    item instanceof AppInfo) {
-//                AppInfo appInfo = (AppInfo) info;
-//                return (appInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
-//            }
-//
-//            if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
-//                    item instanceof ShortcutInfo) {
-//                if (LauncherAppState.isDisableAllApps()) {
-//                    ShortcutInfo shortcutInfo = (ShortcutInfo) info;
-//                    return (shortcutInfo.flags & AppInfo.DOWNLOADED_FLAG) != 0;
-//                } else {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
     }
 
     /**

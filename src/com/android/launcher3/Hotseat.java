@@ -120,6 +120,7 @@ public class Hotseat extends FrameLayout
         DeviceProfile grid = mLauncher.getDeviceProfile();
         mContent = (CellLayout) findViewById(R.id.layout);
         if (grid.isLandscape && !grid.isLargeTablet) {
+            // edit by candice:横屏下hotseat也使用1行多列布局
             mContent.setGridSize(1, (int) grid.inv.numHotseatIcons);
 //            mContent.setGridSize((int) grid.inv.numHotseatIcons, 1);
         } else {
@@ -226,6 +227,10 @@ public class Hotseat extends FrameLayout
         return mBackgroundColor;
     }
 
+    /**
+     * edit by candice:增加方法，设置托盘广告位内容
+     * @param apps
+     */
     public void setApps(ArrayList<AdInfo> apps) {
         // 更新界面
         Log.d(TAG, "setApps");

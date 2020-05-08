@@ -61,7 +61,9 @@
 
         <include
             android:id="@+id/drop_target_bar"
-            layout="@layout/drop_target_bar_horz" />
+            layout="@layout/drop_target_bar_horz"
+            android:visibility="gone"
+            />
 
         <View
             android:layout_width="0dp"

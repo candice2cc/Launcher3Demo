@@ -227,7 +227,7 @@ public class DeviceProfile {
         Resources res = context.getResources();
         float padding = res.getInteger(R.integer.config_allAppsButtonPaddingPercent) / 100f;
         allAppsButtonVisualSize = (int) (hotseatIconSizePx * (1 - padding)) - context.getResources()
-                .getDimensionPixelSize(R.dimen.all_apps_button_scale_down);
+                        .getDimensionPixelSize(R.dimen.all_apps_button_scale_down);
     }
 
     private void updateAvailableDimensions(DisplayMetrics dm, Resources res) {
@@ -258,6 +258,7 @@ public class DeviceProfile {
 
         // TODO 配置化？
 
+        // edit by candice: 定义左侧padding
         workspacePaddingLeft = Utilities.pxFromDp(52, dm);
 
         cellWidthPx = iconSizePx;
@@ -291,12 +292,13 @@ public class DeviceProfile {
 
         final int folderBottomPanelSize =
                 res.getDimensionPixelSize(R.dimen.folder_label_padding_top)
-                        + res.getDimensionPixelSize(R.dimen.folder_label_padding_bottom)
-                        + Utilities.calculateTextHeight(res.getDimension(R.dimen.folder_label_text_size));
+                 + res.getDimensionPixelSize(R.dimen.folder_label_padding_bottom)
+                + Utilities.calculateTextHeight(res.getDimension(R.dimen.folder_label_text_size));
 
         // Don't let the folder get too close to the edges of the screen.
 
-        // TODO 小分辨率下需要适配
+        // TODO 小分辨率下需要考虑适配
+        // edit by candice: 文件夹单元格尺寸 100 * 80
         folderCellWidthPx = (int) (Utilities.pxFromDp(100, dm) * scale);
         folderCellHeightPx = (int) (Utilities.pxFromDp(80, dm) * scale);
 //        folderCellWidthPx = Math.min(iconSizePx + 2 * cellPaddingX,
@@ -320,9 +322,7 @@ public class DeviceProfile {
         allAppsNumCols = allAppsNumPredictiveCols = inv.numColumns;
     }
 
-    /**
-     * Returns the width and height of the search bar, ignoring any padding.
-     */
+    /** Returns the width and height of the search bar, ignoring any padding. */
     public Point getSearchBarDimensForWidgetOpts() {
         if (isVerticalBarLayout()) {
             return new Point(dropTargetBarSizePx, availableHeightPx - 2 * edgeMarginPx);
@@ -387,14 +387,14 @@ public class DeviceProfile {
                 int availablePaddingX = Math.max(0, width - (int) ((inv.numColumns * cellWidthPx) +
                         ((inv.numColumns - 1) * gapScale * cellWidthPx)));
                 availablePaddingX = (int) Math.min(availablePaddingX,
-                        width * MAX_HORIZONTAL_PADDING_PERCENT);
+                            width * MAX_HORIZONTAL_PADDING_PERCENT);
                 int availablePaddingY = Math.max(0, height - topWorkspacePadding - paddingBottom
                         - (int) (2 * inv.numRows * cellHeightPx));
+
+                // edit by candice:修改 workspace padding
 //                padding.set(availablePaddingX / 2, topWorkspacePadding + availablePaddingY / 2,
 //                        availablePaddingX / 2, paddingBottom + availablePaddingY / 2);
 
-
-                // TODO 临时
                 padding.set(workspacePaddingLeft, topWorkspacePadding + availablePaddingY / 2, workspacePaddingLeft, paddingBottom + availablePaddingY / 2);
             } else {
                 // Pad the top and bottom of the workspace with search/hotseat bar sizes
@@ -449,7 +449,6 @@ public class DeviceProfile {
     public static int calculateCellWidth(int width, int countX) {
         return width / countX;
     }
-
     public static int calculateCellHeight(int height, int countY) {
         return height / countY;
     }
@@ -571,7 +570,7 @@ public class DeviceProfile {
 
             int visibleChildCount = getVisibleChildCount(overviewMode);
             int totalItemWidth = visibleChildCount * overviewModeBarItemWidthPx;
-            int maxWidth = totalItemWidth + (visibleChildCount - 1) * overviewModeBarSpacerWidthPx;
+            int maxWidth = totalItemWidth + (visibleChildCount-1) * overviewModeBarSpacerWidthPx;
 
             lp.width = Math.min(availableWidthPx, maxWidth);
             lp.height = getOverviewModeButtonBarHeight();
@@ -609,12 +608,12 @@ public class DeviceProfile {
 
         // No paddings for portrait phone
         if (isPhone && !isVerticalBarLayout()) {
-            return new int[]{0, 0};
+            return new int[] {0, 0};
         }
 
         // In landscape, we match the width of the workspace
         int padding = (pageIndicatorLandGutterRightNavBarPx +
                 hotseatBarHeightPx + hotseatLandGutterPx + mInsets.left) / 2;
-        return new int[]{padding, padding};
+        return new int[]{ padding, padding };
     }
 }

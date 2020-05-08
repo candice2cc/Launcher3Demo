@@ -140,6 +140,7 @@ public class PageIndicatorLineCaret extends PageIndicator {
         mAllAppsHandle.setOnClickListener(mLauncher);
         mAllAppsHandle.setOnLongClickListener(mLauncher);
         mAllAppsHandle.setOnFocusChangeListener(mLauncher.mFocusHandler);
+        // edit by candice: 判断是否开启抽屉
         if (!LauncherAppState.isDisableAllApps()) {
             mLauncher.setAllAppsButton(mAllAppsHandle);
 

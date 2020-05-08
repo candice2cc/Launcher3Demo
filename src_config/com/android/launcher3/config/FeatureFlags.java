@@ -24,13 +24,13 @@ public final class FeatureFlags {
     }
 
     // Custom flags go below this
-    public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = true;
+    public static boolean LAUNCHER3_DISABLE_ICON_NORMALIZATION = true; // icon不需要缩放处理
     // As opposed to the new spring-loaded workspace.
     public static boolean LAUNCHER3_LEGACY_WORKSPACE_DND = true; // 长按拖拽icon时，大小不变化模式
     public static boolean LAUNCHER3_LEGACY_FOLDER_ICON = false;
     public static boolean LAUNCHER3_USE_SYSTEM_DRAG_DRIVER = true;
     public static boolean LAUNCHER3_DISABLE_PINCH_TO_OVERVIEW = false;
-    public static boolean LAUNCHER3_ALL_APPS_PULL_UP = false;
+    public static boolean LAUNCHER3_ALL_APPS_PULL_UP = false;  // 关闭显示全部应用抽屉功能
 
     // Feature flag to enable moving the QSB on the 0th screen of the workspace.
     public static final boolean QSB_ON_FIRST_SCREEN = true;
@@ -42,7 +42,7 @@ public final class FeatureFlags {
     public static final boolean LIGHT_STATUS_BAR = false;
 
     // add by candice
-    public static boolean LAUNCHER_DISABLE_ALL_APPS = true;
-    public static boolean LAUNCHER_HAS_CUSTOM_LEFT = false;
+    public static boolean LAUNCHER_DISABLE_ALL_APPS = true;  // 自定义开关：关闭全部应用功能
+    public static boolean LAUNCHER_HAS_CUSTOM_LEFT = false; // 自定义开关：是否开启左屏
 
 }

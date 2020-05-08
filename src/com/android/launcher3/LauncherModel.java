@@ -103,7 +103,7 @@ import java.util.concurrent.Executor;
  */
 public class LauncherModel extends BroadcastReceiver
         implements LauncherAppsCompat.OnAppsChangedCallbackCompat {
-    // TODO debug set
+    // edit by candice TODO debug set,发布时需要关闭
     static final boolean DEBUG_LOADERS = true;
     private static final boolean DEBUG_RECEIVER = false;
 
@@ -112,28 +112,20 @@ public class LauncherModel extends BroadcastReceiver
     private static final int ITEMS_CHUNK = 6; // batch size for the workspace icons
     private static final long INVALID_SCREEN_ID = -1L;
 
-    @Thunk
-    final LauncherAppState mApp;
-    @Thunk
-    final Object mLock = new Object();
-    @Thunk
-    DeferredHandler mHandler = new DeferredHandler();
-    @Thunk
-    LoaderTask mLoaderTask;
-    @Thunk
-    boolean mIsLoaderTaskRunning;
-    @Thunk
-    boolean mHasLoaderCompletedOnce;
+    @Thunk final LauncherAppState mApp;
+    @Thunk final Object mLock = new Object();
+    @Thunk DeferredHandler mHandler = new DeferredHandler();
+    @Thunk LoaderTask mLoaderTask;
+    @Thunk boolean mIsLoaderTaskRunning;
+    @Thunk boolean mHasLoaderCompletedOnce;
 
-    @Thunk
-    static final HandlerThread sWorkerThread = new HandlerThread("launcher-loader");
+    @Thunk static final HandlerThread sWorkerThread = new HandlerThread("launcher-loader");
 
     static {
         sWorkerThread.start();
     }
 
-    @Thunk
-    static final Handler sWorker = new Handler(sWorkerThread.getLooper());
+    @Thunk static final Handler sWorker = new Handler(sWorkerThread.getLooper());
 
     // We start off with everything not loaded.  After that, we assume that
     // our monitoring of the package manager provides all updates and we never
@@ -141,6 +133,7 @@ public class LauncherModel extends BroadcastReceiver
     private boolean mWorkspaceLoaded;
     private boolean mAllAppsLoaded;
     private boolean mDeepShortcutsLoaded;
+    // edit by candice：同理增加HotSeat load标志
     private boolean mHotSeatLoaded;
 
     /**
@@ -149,12 +142,12 @@ public class LauncherModel extends BroadcastReceiver
      */
     static final ArrayList<Runnable> mBindCompleteRunnables = new ArrayList<Runnable>();
 
-    @Thunk
-    WeakReference<Callbacks> mCallbacks;
+    @Thunk WeakReference<Callbacks> mCallbacks;
 
     // < only access in worker thread >
     private final AllAppsList mBgAllAppsList;
 
+    // edit by candice：同理增加hotseat 广告信息数据
     private final ArrayList<AdInfo> mHotSeatAppsList = new ArrayList<AdInfo>();
 
     // Entire list of widgets.
@@ -194,7 +187,7 @@ public class LauncherModel extends BroadcastReceiver
 
     // sBgAppWidgets is all LauncherAppWidgetInfo created by LauncherModel. Passed to bindAppWidget()
     static final ArrayList<LauncherAppWidgetInfo> sBgAppWidgets =
-            new ArrayList<LauncherAppWidgetInfo>();
+        new ArrayList<LauncherAppWidgetInfo>();
 
     // sBgFolders is all FolderInfos created by LauncherModel. Passed to bindFolders()
     static final LongArrayMap<FolderInfo> sBgFolders = new LongArrayMap<>();
@@ -464,6 +457,7 @@ public class LauncherModel extends BroadcastReceiver
         LongSparseArray<ArrayList<ItemInfo>> screenItems = new LongSparseArray<>();
 
         // Use sBgItemsIdMap as all the items are already loaded.
+        // edit by candice:注释断言，会引起报错
 //        assertWorkspaceLoaded();
         synchronized (sBgLock) {
             for (ItemInfo info : sBgItemsIdMap) {
@@ -543,7 +537,6 @@ public class LauncherModel extends BroadcastReceiver
                 // can not use sBgWorkspaceScreens because loadWorkspace() may not have been
                 // called.
                 ArrayList<Long> workspaceScreens = loadWorkspaceScreensDb(context);
-                Log.d("pengcong", "workspaceScreens:" + workspaceScreens.toString());
                 synchronized (sBgLock) {
                     for (ItemInfo item : workspaceApps) {
                         if (item instanceof ShortcutInfo) {
@@ -1316,6 +1309,7 @@ public class LauncherModel extends BroadcastReceiver
             // TODO: why?
             mDeepShortcutsLoaded = false;
 
+            // edit by candice：同理重置标志
             mHotSeatLoaded = false;
         }
     }
@@ -1417,11 +1411,9 @@ public class LauncherModel extends BroadcastReceiver
         private Context mContext;
         private int mPageToBindFirst;
 
-        @Thunk
-        boolean mIsLoadingAndBindingWorkspace;
+        @Thunk boolean mIsLoadingAndBindingWorkspace;
         private boolean mStopped;
-        @Thunk
-        boolean mLoadAndBindStepFinished;
+        @Thunk boolean mLoadAndBindStepFinished;
 
         LoaderTask(Context context, int pageToBindFirst) {
             mContext = context;
@@ -1523,6 +1515,7 @@ public class LauncherModel extends BroadcastReceiver
 
             bindDeepShortcuts();
 
+            // edit by candice：绑定HotSeat
             bindHotSeat();
 
 
@@ -1553,7 +1546,7 @@ public class LauncherModel extends BroadcastReceiver
                 if (DEBUG_LOADERS) Log.d(TAG, "step 2: loading all apps");
                 loadAndBindAllApps();
 
-                // 当前Launcher没有应用程序菜单，将应用程序菜单中的数据合并到桌面上来
+                // edit by candice：当前Launcher没有应用程序菜单时，将应用程序菜单中的数据合并到桌面上来
                 // TODO 应用程序菜单中的数据需要清0?
                 if (LauncherAppState.isDisableAllApps()) {
                     verifyApplications();
@@ -1566,6 +1559,7 @@ public class LauncherModel extends BroadcastReceiver
                 if (DEBUG_LOADERS) Log.d(TAG, "step 3: loading deep shortcuts");
                 loadAndBindDeepShortcuts();
 
+                // edit by candice：增加第四步，加载HotSeat
                 waitForIdle();
 
                 if (DEBUG_LOADERS) Log.d(TAG, "step 4: loading hotseat");
@@ -1626,6 +1620,9 @@ public class LauncherModel extends BroadcastReceiver
             }
         }
 
+        /**
+         * edit by candice：增加校验方法
+         */
         private void verifyApplications() {
             final Context context = mApp.getContext();
 
@@ -2920,6 +2917,9 @@ public class LauncherModel extends BroadcastReceiver
             }
         }
 
+        /**
+         * edit by candice:增加加载和绑定HotSeat方法
+         */
         private void loadAndBindHotSeat() {
             if (DEBUG_LOADERS) {
                 Log.d(TAG, "loadAndBindHotSeat mHotSeatLoaded=" + mHotSeatLoaded);
@@ -2937,6 +2937,9 @@ public class LauncherModel extends BroadcastReceiver
             bindHotSeat();
         }
 
+        /**
+         * edit by candice:增加加载HotSeat数据方法
+         */
         private void loadHotSeat() {
             final long loadTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
 
@@ -2964,6 +2967,9 @@ public class LauncherModel extends BroadcastReceiver
 
         }
 
+        /**
+         * edit by candice:增加绑定HotSeat方法
+         */
         private void bindHotSeat() {
             final Callbacks oldCallbacks = mCallbacks.get();
             if (oldCallbacks == null) {
@@ -3307,6 +3313,7 @@ public class LauncherModel extends BroadcastReceiver
 
             if (added != null) {
                 // Ensure that we add all the workspace applications to the db
+                // edit by candice：增加判断逻辑，新增的应用添加到桌面，而不是全部应用菜单
                 if (LauncherAppState.isDisableAllApps()) {
                     final ArrayList<ItemInfo> addedInfos = new ArrayList<ItemInfo>(added);
                     addAndBindAddedWorkspaceItems(context, addedInfos);

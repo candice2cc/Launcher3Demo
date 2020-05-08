@@ -178,6 +178,10 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         });
     }
 
+    /** edit by candice:
+     * 替代原有的populateAndShow方法
+     * @param originalIcon
+     */
     public void populateAndShow2(BubbleTextView originalIcon) {
         final Resources resources = getResources();
         final int arrowWidth = resources.getDimensionPixelSize(R.dimen.deep_shortcuts_arrow_width);
@@ -264,6 +268,9 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         return getChildCount() - 1;
     }
 
+    /** edit by candice:
+     * 替代原有的animateOpen方法,实现简单的淡入效果
+     */
     private void animateOpen2() {
         setVisibility(View.VISIBLE);
         setAlpha(0f);
@@ -309,8 +316,6 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
         // Animate shortcuts
         DecelerateInterpolator interpolator = new DecelerateInterpolator();
-
-
         for (int i = 0; i < shortcutCount; i++) {
             final DeepShortcutView deepShortcutView = getShortcutAt(i);
             deepShortcutView.setVisibility(INVISIBLE);
@@ -571,7 +576,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     @Override
     public void onDropCompleted(View target, DropTarget.DragObject d, boolean isFlingToDelete,
-                                boolean success) {
+            boolean success) {
         if (!success) {
             d.dragView.remove();
             mLauncher.showWorkspace(true);
@@ -720,7 +725,6 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
     /**
      * Shows the shortcuts container for {@param icon}
-     *
      * @return the container if shown or null.
      */
     public static DeepShortcutsContainer showForIcon(BubbleTextView icon) {
@@ -744,6 +748,12 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
         return null;
     }
 
+    /**
+     * edit by candice:
+     * 替代 showForIcon 方法，显示应用快捷操作方式
+     * @param icon
+     * @return
+     */
     public static DeepShortcutsContainer showForOperation(BubbleTextView icon) {
         Launcher launcher = Launcher.getLauncher(icon.getContext());
         if (launcher.getOpenShortcutsContainer() != null) {
@@ -776,7 +786,7 @@ public class DeepShortcutsContainer extends LinearLayout implements View.OnLongC
 
         @Override
         protected Bitmap getBadgedIcon(Bitmap unbadgedBitmap, ShortcutInfoCompat shortcutInfo,
-                                       IconCache cache, Context context) {
+                IconCache cache, Context context) {
             return unbadgedBitmap;
         }
     }

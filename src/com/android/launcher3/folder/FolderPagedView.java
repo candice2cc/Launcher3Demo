@@ -375,7 +375,7 @@ public class FolderPagedView extends PagedView {
         // Update footer
         mPageIndicator.setVisibility(getPageCount() > 1 ? View.VISIBLE : View.GONE);
         // Set the gravity as LEFT or RIGHT instead of START, as START depends on the actual text.
-        // comment by candice 居中
+        // edit by candice:  居中
 //        mFolder.mFolderName.setGravity(getPageCount() > 1 ?
 //                (mIsRtl ? Gravity.RIGHT : Gravity.LEFT) : Gravity.CENTER_HORIZONTAL);
     }

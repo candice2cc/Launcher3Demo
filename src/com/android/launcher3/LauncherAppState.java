@@ -44,14 +44,12 @@ public class LauncherAppState {
 
 
     private final AppFilter mAppFilter;
-    @Thunk
-    final LauncherModel mModel;
+    @Thunk final LauncherModel mModel;
     private final IconCache mIconCache;
     private final WidgetPreviewLoader mWidgetCache;
     private final DeepShortcutManager mDeepShortcutManager;
 
-    @Thunk
-    boolean mWallpaperChangedSinceLastCheck;
+    @Thunk boolean mWallpaperChangedSinceLastCheck;
 
     private static WeakReference<LauncherProvider> sLauncherProvider;
     private static Context sContext;
@@ -101,7 +99,6 @@ public class LauncherAppState {
         }
 
         mInvariantDeviceProfile = new InvariantDeviceProfile(sContext);
-        Log.d(TAG, "numColumns:" + mInvariantDeviceProfile.numColumns + ",numRows:" + mInvariantDeviceProfile.numRows);
         mIconCache = new IconCache(sContext, mInvariantDeviceProfile);
         mWidgetCache = new WidgetPreviewLoader(sContext, mIconCache);
         mDeepShortcutManager = new DeepShortcutManager(sContext, new ShortcutCache());
@@ -193,6 +190,10 @@ public class LauncherAppState {
         return mInvariantDeviceProfile;
     }
 
+    /**
+     * 判断是否关闭所有应用抽屉功能
+     * @return
+     */
     public static boolean isDisableAllApps() {
         // Returns false on non-dogfood builds.
         return FeatureFlags.LAUNCHER_DISABLE_ALL_APPS;

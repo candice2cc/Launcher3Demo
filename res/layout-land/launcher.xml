@@ -56,7 +56,9 @@
 
         <include
             android:id="@+id/drop_target_bar"
-            layout="@layout/drop_target_bar_vert" />
+            layout="@layout/drop_target_bar_vert"
+
+            android:visibility="gone"/>
 
         <include layout="@layout/overview_panel"
             android:id="@+id/overview_panel"
